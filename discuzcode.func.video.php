@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 3.4
+    @version 3.5
 **/
 
 /**
@@ -50,7 +50,7 @@ function _discuzcode_video_callback($matches) {
   if (!preg_match('/^\http:\/\//', $matches[1])) $matches[1]='http://'.$matches[1];
   $string=(!empty($matches[2])) ? $matches[2] : $matches[1];
   
-  $url=parse_url($matches[1]);
+  $url=parse_url(str_replace('&amp;', '&', $matches[1]));
   switch (TRUE) {
     case (strtolower($url["host"])=='youtube.com'):
     case preg_match('/[a-z]+?\.youtube\.com/', strtolower($url["host"])):
@@ -88,19 +88,6 @@ function _discuzcode_video_callback($matches) {
       return sprintf($codeblock, $video_id, $video_id, $matches[1], $string);
     } elseif (preg_match('/^\/playlist\/id\/.+?\/$/', $url["path"])) {
       $video_id=preg_replace('/^\/playlist\/id\/(.+?)\/$/', '$1', $url["path"]);
-/*
-      $codeblock='<div style="width: 488px; border: solid 1px #000; '.
-      'background: #CCC;"><div style="background: #000;">'.
-      '<object width="488" height="423">'.
-      '<param name="movie" value="http://www.tudou.com/player/playlist.swf?lid=%d"></param>'.
-      '<param name="allowscriptaccess" value="always">'.
-      '<embed src="http://www.tudou.com/player/playlist.swf?lid=%d" '.
-      'type="application/x-shockwave-flash" width="488" height="423"></embed>'.
-      '</object></div>'.
-      '<div style="margin: 2px 4px;">'.
-      'Source: <a href="%s" style="color: #E00;" '.
-      'target="_blank">%s</a></div></div>'."\n";
-*/
       $codeblock='<div style="width: 488px; border: solid 1px #000; '.
       'background: #CCC;"><div style="background: #000;">'.
       '<object width="488" height="423"><param name="movie" '.
@@ -199,6 +186,24 @@ function _discuzcode_video_callback($matches) {
         return sprintf($codeblock, $hash, $matches[1], $matches[1]);
        }
     break;
+    case preg_match('/[a-z]+?\.collegehumor\.com/', strtolower($url["host"])):
+      if (preg_match('/^\/video\:\d+$/', $url["path"])) {
+        $clipid=preg_replace('/^\/video\:(\d+?)$/', '$1', $url["path"]);
+        $codeblock='<div style="width: 480px; border: solid 1px #000; '.
+        'background: #CCC;"><div style="background: #000;">'.
+        '<object type="application/x-shockwave-flash" '.
+        'data="http://www.collegehumor.com/moogaloop/'.
+        'moogaloop.swf?clip_id=%d&fullscreen=1" '.
+        'width="480" height="360" ><param name="allowfullscreen" value="true" />'.
+        '<param name="movie" quality="best" value="http://www.collegehumor.com/'.
+        'moogaloop/moogaloop.swf?clip_id=%d&fullscreen=1" /></object>'.
+        '</div>'.
+        '<div style="margin: 2px 4px;">'.
+        'Source: <a href="%s" style="color: #E00;" '.
+        'target="_blank">%s</a></div></div>'."\n";
+        return sprintf($codeblock, $clipid, $clipid, $matches[1], $matches[1]);
+       }
+    break; 
     case preg_match('/[a-z]+?\.builderau\.com\.au/', strtolower($url["host"])):
       if (preg_match('/^\/video\/play\/\d+/', $url["path"])) {
         $vid=(int) preg_replace('/^\/video\/play\/(\d+?)/', '$1', $url["path"]);
@@ -283,6 +288,22 @@ function _discuzcode_video_callback($matches) {
       'Source: <a href="%s" style="color: #E00;" '.
       'target="_blank">%s</a></div></div>'."\n";
       return sprintf($codeblock, $matches[1], $matches[1], $matches[1], $string);
+    break;
+    case preg_match('/www\.mtvjapan\.com/', strtolower($url["host"])):
+      if (preg_match('/^\/flvplayer\/mcmsplayer\.swf$/', $url["path"])) {
+         $codeblock='<div style="width: 650px; border: solid 1px #000; '.
+        'background: #CCC;"><div style="background: #000;">'.
+        '<object classid=clsid:D27CDB6E-AE6D-11CF-96B8-444553540000 '.
+        'codebase=http://download.macromedia.com/pub/shockwave/cabs'.
+        '/flash/swflash.cab#version=6,0,40,0>'.
+        '<embed src=%s '.
+        'type=application/x-shockwave-flash wmode=transparent width=650 height=338/></object>'.
+        '</div>'.
+        '<div style="margin: 2px 4px;">'.
+        'Source: <a href="%s" style="color: #E00;" '.
+        'target="_blank">%s</a></div></div>'."\n";
+        return sprintf($codeblock, $matches[1], $matches[1], $matches[1], $matches[1]);
+      }
     break;
   }
   
