@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 3.2
+    @version 3.3
 **/
 
 /**
@@ -198,6 +198,24 @@ function _discuzcode_video_callback($matches) {
         'target="_blank">%s</a></div></div>'."\n";
         return sprintf($codeblock, $hash, $matches[1], $matches[1]);
        }
+    break;
+    case preg_match('/[a-z]+?\.builderau\.com\.au/', strtolower($url["host"])):
+      if (preg_match('/^\/video\/play\/\d+/', $url["path"])) {
+        $vid=(int) preg_replace('/^\/video\/play\/(\d+?)/', '$1', $url["path"]);
+        $codeblock='<div style="width: 400px; border: solid 1px #000; '.
+        'background: #CCC;"><div style="background: #000;">'.
+        '</div>'.
+        '<object width="400" height="330"><param name="movie" '.
+        'value="http://www.builderau.com.au/video/embed/%d"></param></param>'.
+        '<param name="allowfullscreen" value="true"></param>'.
+        '<embed src="http://www.builderau.com.au/video/embed/%d" '.
+        'type="application/x-shockwave-flash" allowfullscreen="true" '.
+        'width="400" height="330"></embed></object>'.
+        '<div style="margin: 2px 4px;">'.
+        'Source: <a href="%s" style="color: #E00;" '.
+        'target="_blank">%s</a></div></div>'."\n";
+        return sprintf($codeblock, $vid, $vid, $matches[1], $matches[1]);
+      }
     break;
     case preg_match('/[a-z]+?\.gametrailers\.com/', strtolower($url["host"])):
       if (preg_match('/^\/player\/\d+?\.html$/', $url["path"])) {
