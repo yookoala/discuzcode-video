@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 3.1
+    @version 3.2
 **/
 
 /**
@@ -185,6 +185,7 @@ function _discuzcode_video_callback($matches) {
     case preg_match('/[a-z]+?\.metacafe\.com/', strtolower($url["host"])):
       if (preg_match('/^\/watch\/\d+\/.+$/', $url["path"])) {
         $hash=preg_replace('/^\/watch\/(.+?)$/', '$1', $url["path"]);
+        $hash=preg_replace("/\/$/", '', $hash);
         $codeblock='<div style="width: 400px; border: solid 1px #000; '.
         'background: #CCC;"><div style="background: #000;">'.
         '<embed src="http://www.metacafe.com/fplayer/%s.swf" '.
@@ -197,6 +198,32 @@ function _discuzcode_video_callback($matches) {
         'target="_blank">%s</a></div></div>'."\n";
         return sprintf($codeblock, $hash, $matches[1], $matches[1]);
        }
+    break;
+    case preg_match('/[a-z]+?\.gametrailers\.com/', strtolower($url["host"])):
+      if (preg_match('/^\/player\/\d+?\.html$/', $url["path"])) {
+        $id=preg_replace('/^\/player\/(\d+?)\.html$/', '$1', $url["path"]);
+        $codeblock='<div style="width: 480px; border: solid 1px #000; '.
+        'background: #CCC;"><div style="background: #000;">'.
+        '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" '.
+        'codebase="http://download.macromedia.com/pub/shockwave/cabs/'.
+        'flash/swflash.cab#version=8,0,0,0" id="gtembed" width="480" '.
+        'height="392"><param name="allowScriptAccess" value="sameDomain" /> '.
+        '<param name="allowFullScreen" value="true" /> '.
+        '<param name="movie" '.
+        'value="http://www.gametrailers.com/remote_wrap.php?mid=%d"/>'.
+        '<param name="quality" value="high" /> '.
+        '<embed src="http://www.gametrailers.com/remote_wrap.php?mid=%d" '.
+        'swLiveConnect="true" name="gtembed" align="middle" '.
+        'allowScriptAccess="sameDomain" allowFullScreen="true" '.
+        'quality="high" pluginspage="http://www.macromedia.com/go/getflash'.
+        'player" type="application/x-shockwave-flash" width="480" '.
+        'height="392"></embed> </object>'.
+        '</div>'.
+        '<div style="margin: 2px 4px;">'.
+        'Source: <a href="%s" style="color: #E00;" '.
+        'target="_blank">%s</a></div></div>'."\n";
+        return sprintf($codeblock, $id, $id, $matches[1], $matches[1]);
+      }
     break;
     case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url["path"])))): 
       $codeblock='<div style="width: 400px; border: solid 1px #000; '.
