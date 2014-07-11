@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 4.1
+    @version 4.2
 **/
 
 /**
@@ -62,6 +62,13 @@ function _discuzcode_video_template($embed, $link=False, $text=False, $width=425
   <div style="background: #000;">$embed</div>
 </div>
 CODEBLOCK;
+  } elseif (($link===False) AND ($text!==False)) {
+    $codeblock = <<<CODEBLOCK
+<div class="videoblock" style="width: {$width}px;{$heightcode} border: solid 1px #000; background: #CCC;">
+  <div style="background: #000;">$embed</div>
+  <div style="margin: 2px 4px; overflow-x: hidden;">$text</div>
+</div>
+CODEBLOCK;
   } else {
     $codeblock = <<<CODEBLOCK
 <div class="videoblock" style="width: {$width}px;{$heightcode} border: solid 1px #000; background: #CCC;">
@@ -92,11 +99,17 @@ function _discuzcode_video_callback($matches) {
     case preg_match('/[a-z]+?\.youtube\.com/', strtolower($url["host"])):
     if (preg_match('/^\/watch$/', $url["path"])) {
       parse_str($url["query"], $args); 
+      $location = preg_replace('/([a-z]+?)\.youtube\.com/', 
+        '$1', strtolower($url["host"]));
       $embed = sprintf('<object width="425" height="366"><param name="movie" '.
-      'value="http://www.youtube.com/v/%s"></param><param name="wmode" '.
-      'value="transparent"></param><embed src="http://www.youtube.com/v/%s" '.
-      'type="application/x-shockwave-flash" wmode="transparent" '.
-      'width="425" height="366"></embed></object>', $args["v"], $args["v"]);
+      'value="http://%s.youtube.com/v/%s&hl=en&fs=1"></param>'.
+      '<param name="wmode" value="transparent"></param>'.
+      '<param name="allowFullScreen" value="true"></param>'.
+      '<embed src="http://%s.youtube.com/v/%s&hl=en&fs=1" '.
+      'type="application/x-shockwave-flash" '.
+      'allowfullscreen="true" wmode="transparent" '.
+      'width="425" height="366"></embed></object>', 
+      $location, $args["v"], $location, $args["v"]);
       return _discuzcode_video_template($embed, $link, $string);
     }
     break;
@@ -344,6 +357,23 @@ function _discuzcode_video_callback($matches) {
         return _discuzcode_video_template($embed, $link, $string, 433);
       }
     break;
+    case preg_match('/you\.video\.sina\.com\.cn/', strtolower($url["host"])):
+      $regex = '/^\/b\/([0-9]+?)-([0-9]+?)\.html$/';
+      if (preg_match($regex, $url["path"])) {
+        $vid = preg_replace($regex, "$1", $url["path"]);
+        $uid = preg_replace($regex, "$2", $url["path"]);
+        $embed = sprintf('<object id="ssss" width="480" height="370" >'.
+        '<param name="allowScriptAccess" value="always" />'.
+        '<embed pluginspage="http://www.macromedia.com/go/getflashplayer" '.
+        'src="http://vhead.blog.sina.com.cn/player/outer_player.swf?'.
+        'auto=0&vid=%d&uid=%d" '.
+        'type="application/x-shockwave-flash" name="ssss" '.
+        'allowFullScreen="true" '.
+        'allowScriptAccess="always" width="480" height="370">'.
+        '</embed></object>', $vid, $uid);
+        return _discuzcode_video_template($embed, $link, $string, 480);
+      }
+    break;
   }
   
   return $matches[0];
@@ -383,33 +413,35 @@ function _discuzcode_video_html_callback($matches) {
   // ** this function is experimental **
   // handles [video] [/video] html embed directly
  
-  // use regex to remove possible 
-  // vulernable code in the video embed
-  
-  /** approach 1: identify and remove bad code **/
-  // remove javascripts
-  $regex_search[]  = "/\<(script.*?)\>/";
-  $regex_replace[] = "&lt;$1&gt;";
-  $regex_search[]  = "/\<(\/script)\>/";
-  $regex_replace[] = "&lt;$1&gt;";
-  
-  // remove tables, style and misc html code
-  $regex_search[]  = "/\<((meta|link).*?)\>/";
-  $regex_replace[] = "&lt;$1&gt;";
-  $regex_search[]  = "/\<((table|ul|ol|li|th|tr|td|div|style).*?)\>/";
-  $regex_replace[] = "&lt;$1&gt;";
-  $regex_search[]  = "/\<(\/(table|ul|ol|li|th|tr|td|div|style))\>/";
-  $regex_replace[] = "&lt;$1&gt;";
-  $regex_search[]  = "/\<(\/(body|html))\>/";
-  $regex_replace[] = "&lt;$1&gt;";
-  
-  /** approach 2: remove all but safe code **/
-  #$tags_allowed="embed|object|param";
-  #$regex_search[]  = "/\<((?!($tags_allowed)|(?!(\/($tags_allowed)))).*?)\>/";
-  #$regex_replace[] = "&lt;$2&gt;";
-
-  // process the video embed
+  // change html entity back to html
   $embed = trim(html_entity_decode($matches[1]));
-  $embed = preg_replace($regex_search, $regex_replace, $embed);
-  return "<div class=\"video\">$embed</div>";
+  
+  // extract non-embed-code as text
+  $text  = str_replace("\n", "<br />",
+    trim(preg_replace("/(\<br\>|\<br\/\>|\<br[ ]+\/\>)/i", "", strip_tags($embed, '<a>'))));
+  $text  = preg_replace("/[ \t]+/", " ", $text);
+  
+  // process spaces in the video embed
+  $embed = str_replace(array("\n", "\r"), "", $embed);
+  $embed = preg_replace("/((?<=\>)[ \t]+)/", "", $embed);
+  
+  // remove possible vulernable code in the video embed
+  $embed = strip_tags($embed, '<object><param><embed>');
+
+  // remove text before or after embed code
+  if (!preg_match("/.+?\>$/", $embed)) $embed = preg_replace("/(.*\>).+?$/", "$1", $embed);
+  if (!preg_match("/^<.+?/", $embed))  $embed = preg_replace("/^.+?(\<.*)/", "$1", $embed);
+  
+  // experimental: check, in the embed code, the width of it
+  preg_match("/width=\"([0-9]+)\"/", $embed, $result);
+  if (!empty($result)) {
+    $width = $result[1];
+    if (!empty($text)) {
+      return _discuzcode_video_template($embed, False, $text, $width);
+    } else {
+      return _discuzcode_video_template($embed, False, False, $width);
+    }
+  } else {
+    return "<div class=\"video\">$embed</div>";
+  }
 }
