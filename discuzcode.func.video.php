@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 4.2
+    @version 4.2.1
 **/
 
 /**
@@ -53,7 +53,7 @@ if(!defined('IN_DISCUZ')) {
 }
 
 
-function _discuzcode_video_template($embed, $link=False, $text=False, $width=425, $height=False) {
+function _discuzcode_video_template($embed, $link=False, $text=False, $width=480, $height=False) {
   $heightcode=($height===False) ? "":" height: {$height}px;";
   
   if (($link===False) AND ($text===False)) {
@@ -101,16 +101,17 @@ function _discuzcode_video_callback($matches) {
       parse_str($url["query"], $args); 
       $location = preg_replace('/([a-z]+?)\.youtube\.com/', 
         '$1', strtolower($url["host"]));
-      $embed = sprintf('<object width="425" height="366"><param name="movie" '.
+      $embed = sprintf('<object width="480" height="385"><param name="movie" '.
       'value="http://%s.youtube.com/v/%s&hl=en&fs=1"></param>'.
       '<param name="wmode" value="transparent"></param>'.
       '<param name="allowFullScreen" value="true"></param>'.
-      '<embed src="http://%s.youtube.com/v/%s&hl=en&fs=1" '.
+      '<embed quality="high" '.
+      'src="http://%s.youtube.com/v/%s&hl=en&fs=1" '.
       'type="application/x-shockwave-flash" '.
       'allowfullscreen="true" wmode="transparent" '.
-      'width="425" height="366"></embed></object>', 
+      'width="480" height="385"></embed></object>', 
       $location, $args["v"], $location, $args["v"]);
-      return _discuzcode_video_template($embed, $link, $string);
+      return _discuzcode_video_template($embed, $link, $string, 480);
     }
     break;
     case (strtolower($url["host"])=='www.tudou.com'):
