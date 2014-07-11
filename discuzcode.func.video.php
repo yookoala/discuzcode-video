@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 4.2.4
+    @version 4.2.5
 **/
 
 /**
@@ -61,15 +61,14 @@ function _discuzcode_string_trim($string, $length) {
     $str_tail = substr($string, -7, 7);
     return "$str_head...$str_tail";
   }
+  return $string;
 }
 
 function _discuzcode_video_template($embed, $link=False, $text=False, $width=False, $height=False) {
 
   // if the video string = video link
   if ($text==$link) {
-    // make the link shorter here
-    //print strlen($text); exit;
-    $text = _discuzcode_string_trim($text, 40);
+    $text = _discuzcode_string_trim($text, 45); // make the link shorter here
   }
   
   // experimental: check, in the embed code, the width of it
@@ -111,8 +110,6 @@ function _discuzcode_video_callback($matches) {
     $link   = $matches[1];  
     $string = $matches[1];
   }
-  #if (!preg_match('/^\http:\/\//', $matches[1])) $matches[1]='http://'.$matches[1];
-  #$string=(!empty($matches[2])) ? $matches[2] : $matches[1];
   
   $url=parse_url(str_replace('&amp;', '&', $link));
   switch (TRUE) {
@@ -126,8 +123,19 @@ function _discuzcode_video_callback($matches) {
       
       // may add fmt specific dimension config here
       if (isset($args["fmt"]) && is_numeric($args["fmt"])) {
-        $width = 576; $height = 354;
         $query_str = "&hl=en&fs=1&ap=%2526fmt%3D".$args["fmt"];
+        $width = 576; $height = 354;
+        switch ($args["fmt"]) {
+          case 22:
+            $string .= " <span style='color: #000; font-size: 10pt;'>(HD quality)</span>";
+            break;
+          case 35:
+            $string .= " <span style='color: #000; font-size: 10pt;'>(high quality)</span>";
+            break;
+          case 18:
+            $string .= " <span style='color: #000; font-size: 10pt;'>(high quality)</span>";
+            break;
+        }
       } else {
         $width = 576; $height = 354;
         $query_str = "&hl=en&fs=1";
@@ -159,6 +167,18 @@ function _discuzcode_video_callback($matches) {
        'type="application/x-shockwave-flash">'.
        '</embed>', $args["docid"], $args["hl"]);
       return _discuzcode_video_template($embed, $link, $string, 600);
+    break;
+    case (strtolower($url["host"])=='v.youku.com'):
+      $regex = '/^\/v_show\/id_(.+?)\=\.html$/';
+      if (preg_match($regex, $url["path"])) {
+        $sid = preg_replace($regex, '$1', $url["path"]);
+        $embed = sprintf('<embed '.
+        'src="http://player.youku.com/player.php/sid/%s=/v.swf" '.
+        'quality="high" width="480" height="400" align="middle" '.
+        'allowScriptAccess="sameDomain" '.
+        'type="application/x-shockwave-flash"></embed>', $sid);
+        return _discuzcode_video_template($embed, $link, $string, 480);
+      }
     break;
     case (strtolower($url["host"])=='www.tudou.com'):
     case (strtolower($url["host"])=='tudou.com'):
@@ -227,10 +247,10 @@ function _discuzcode_video_callback($matches) {
       'CLASSID="CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95"'.
       'STANDBY="Loading Windows Media Player components..." TYPE="application/x-oleobject">'.
       '<PARAM NAME="FileName" VALUE="%s">'.
-      '<PARAM name="autostart" VALUE="false">'.
-      '<PARAM name="ShowControls" VALUE="true">'.
-      '<param name="ShowStatusBar" value="false">'.
-      '<PARAM name="ShowDisplay" VALUE="false">'.
+      '<PARAM NAME="autostart" VALUE="false">'.
+      '<PARAM NAME="ShowControls" VALUE="true">'.
+      '<PARAM NAME="ShowStatusBar" VALUE="false">'.
+      '<PARAM NAME="ShowDisplay" VALUE="false">'.
       '<EMBED TYPE="application/x-mplayer2" SRC="%s" NAME="MediaPlayer"'.
       'WIDTH="425" HEIGHT="350" ShowControls="1" ShowStatusBar="1" ShowDisplay="0" autostart="0"></EMBED>'.
       '</OBJECT>', $link, $link);
