@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 4.2.1
+    @version 4.2.2
 **/
 
 /**
@@ -53,7 +53,10 @@ if(!defined('IN_DISCUZ')) {
 }
 
 
-function _discuzcode_video_template($embed, $link=False, $text=False, $width=480, $height=False) {
+function _discuzcode_video_template($embed, $link=False, $text=False, $width=False, $height=False) {
+  // experimental: check, in the embed code, the width of it
+  preg_match("/width=\"([0-9]+)\"/", $embed, $result); $width_default = 480;
+  $width=($width===False) ? (!empty($result) ? $result[1] : $width_default) : $width;
   $heightcode=($height===False) ? "":" height: {$height}px;";
   
   if (($link===False) AND ($text===False)) {
@@ -101,6 +104,7 @@ function _discuzcode_video_callback($matches) {
       parse_str($url["query"], $args); 
       $location = preg_replace('/([a-z]+?)\.youtube\.com/', 
         '$1', strtolower($url["host"]));
+/*
       $embed = sprintf('<object width="480" height="385"><param name="movie" '.
       'value="http://%s.youtube.com/v/%s&hl=en&fs=1"></param>'.
       '<param name="wmode" value="transparent"></param>'.
@@ -111,7 +115,31 @@ function _discuzcode_video_callback($matches) {
       'allowfullscreen="true" wmode="transparent" '.
       'width="480" height="385"></embed></object>', 
       $location, $args["v"], $location, $args["v"]);
-      return _discuzcode_video_template($embed, $link, $string, 480);
+*/
+
+/*
+      $embed = sprintf('<object width="480" height="295">'.
+      '<param name="movie" value="http://%s.youtube.com/v/%s&hl=en&fs=1"></param>'.
+      '<param name="allowFullScreen" value="true"></param>'.
+      '<param name="allowscriptaccess" value="always"></param>'.
+      '<embed src="http://%s.youtube.com/v/%s&hl=en&fs=1" '.
+      'type="application/x-shockwave-flash" allowscriptaccess="always" '.
+      'allowfullscreen="true" width="480" height="295" quality="high"></embed>'.
+      '</object>',
+       $location, $args["v"], $location, $args["v"]);
+*/
+
+      $embed = sprintf('<object width="576" height="354">'.
+      '<param name="movie" value="http://%s.youtube.com/v/%s&hl=en&fs=1"></param>'.
+      '<param name="allowFullScreen" value="true"></param>'.
+      '<param name="allowscriptaccess" value="always"></param>'.
+      '<embed src="http://%s.youtube.com/v/%s&hl=en&fs=1" '.
+      'type="application/x-shockwave-flash" allowscriptaccess="always" '.
+      'allowfullscreen="true" width="576" height="354" quality="high"></embed>'.
+      '</object>',
+       $location, $args["v"], $location, $args["v"]);
+
+      return _discuzcode_video_template($embed, $link, $string);
     }
     break;
     case (strtolower($url["host"])=='www.tudou.com'):
