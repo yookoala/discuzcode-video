@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 3.3
+    @version 3.4
 **/
 
 /**
@@ -58,11 +58,11 @@ function _discuzcode_video_callback($matches) {
       parse_str($url["query"], $args); 
       $codeblock='<div style="width: 425px; border: solid 1px #000; '.
       'background: #CCC;"><div style="background: #000;">'.
-      '<object width="425" height="350"><param name="movie" '.
+      '<object width="425" height="366"><param name="movie" '.
       'value="http://www.youtube.com/v/%s"></param><param name="wmode" '.
       'value="transparent"></param><embed src="http://www.youtube.com/v/%s"'.
       ' type="application/x-shockwave-flash" wmode="transparent" '.
-      'width="425" height="350"></embed></object></div>'.
+      'width="425" height="366"></embed></object></div>'.
       '<div style="margin: 2px 4px;">'.
       'Source: <a href="%s" style="color: #E00;" '.
       'target="_blank">%s</a></div></div>'."\n";
@@ -241,6 +241,27 @@ function _discuzcode_video_callback($matches) {
         'Source: <a href="%s" style="color: #E00;" '.
         'target="_blank">%s</a></div></div>'."\n";
         return sprintf($codeblock, $id, $id, $matches[1], $matches[1]);
+      }
+    break;
+    case preg_match('/share\.youthwant\.com\.tw/', strtolower($url["host"])):
+      parse_str($url["query"], $args);
+      if ($url["path"]==='/sh.php' && isset($args["id"])) {
+        $codeblock='<div style="width: 450px; border: solid 1px #000; '.
+        'background: #CCC;"><div style="background: #000;">'.
+        '<object classid=clsid:D27CDB6E-AE6D-11CF-96B8-444553540000 '.
+        'codebase=http://download.macromedia.com/pub/shockwave/cabs'.
+        '/flash/swflash.cab#version=6,0,40,0 width=450 height=359 >'.
+        '<param name=movie value=http://share.youthwant.com.tw/r?m=%d />'.
+        '<param name=wmode value=transparent />'.
+        '<embed src=http://share.youthwant.com.tw/r?m=%d '.
+        'type=application/x-shockwave-flash wmode=transparent '.
+        'width=450 height=359 /></object>'.
+        '</div>'.
+        '<div style="margin: 2px 4px;">'.
+        'Source: <a href="%s" style="color: #E00;" '.
+        'target="_blank">%s</a></div></div>'."\n";
+        return sprintf($codeblock, $args["id"], $args["id"],
+        $matches[1], $matches[1], $string);
       }
     break;
     case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url["path"])))): 
