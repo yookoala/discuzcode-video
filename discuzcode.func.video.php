@@ -12,7 +12,7 @@
     requires PHP 5 or above
     
     @author Koala Yeung
-    @version 6.1
+    @version 7.0
 **/
 
 /**
@@ -994,23 +994,27 @@ function youtube_parameter_extract($url) {
 * use youtube api to check if a video can be embeded or not
 */
 function youtube_can_embed($vid) {
-  static $yt;
-
-  if (!isset($yt)) {
-    require_once 'Zend/Loader.php'; // the Zend dir must be in your include_path
-    Zend_Loader::loadClass('Zend_Gdata_YouTube');
-    $yt = new Zend_Gdata_YouTube();
-  }
-  
+ 
   // only supported by PHP 5
   $cache =  _local_file_cache_get("cache_discuzcode_youtubeapi", $vid);
   if ($cache["has_cache"] == FALSE) {
     try {
-        $videoEntry = $yt->getVideoEntry($vid);
-        $can_embed = ($videoEntry->getNoembed() === null);
+
+      $resp_json = file_get_contents(sprintf(
+        'https://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=json',
+        $vid));
+      $response = json_decode($resp_json, TRUE); // decode to asso array
+
+      $acs = $response['entry']['yt$accessControl'];
+      $can_embed = FALSE;
+      foreach ($acs as $ac) {
+        if ($ac['action'] == 'embed') {
+          $can_embed = ($ac['permission'] == "allowed");
+          break;
+        }
+      }
+
     } catch (Exception $e) {
-      //youtube_can_embed_error($e->getMessage()); // store error
-      //$can_embed = FALSE;
       $can_embed = TRUE;
     }
     _local_file_cache_set("cache_discuzcode_youtubeapi", $vid, array("can_embed"=>$can_embed));
