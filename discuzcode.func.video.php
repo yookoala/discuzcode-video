@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 3.5
+    @version 3.6
 **/
 
 /**
@@ -133,6 +133,28 @@ function _discuzcode_video_callback($matches) {
       '</a></div></div>'."\n";
       return $codeblock;
     break;
+    case preg_match('/^www\.gametrailers\.com$/', strtolower($url["host"])):
+      if (preg_match('/^\/player\/usermovies\/[0-9].+\.html$/', $url["path"])) {
+        $umid=preg_replace('/^\/player\/usermovies\/([0-9].+)\.html$/', '$1', $url["path"]);
+        $codeblock='<div style="width: 480px; border: solid 1px #000; '.
+        'background: #CCC;"><div style="background: #000; height: 392px">'.
+        '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" '.
+        'codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" '.
+        'id="gtembed" width="480" height="392">'.
+        '<param name="allowScriptAccess" value="sameDomain" />'.
+        '<param name="allowFullScreen" value="true" />'.
+        '<param name="movie" value="http://www.gametrailers.com/remote_wrap.php?umid=%d"/> '.
+        '<param name="quality" value="high" />'.
+        '<embed src="http://www.gametrailers.com/remote_wrap.php?umid=%d" swLiveConnect="true" '.
+        'name="gtembed" align="middle" allowScriptAccess="sameDomain" allowFullScreen="true" '.
+        'quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" '.
+        'type="application/x-shockwave-flash" width="480" height="394"></embed></object>'.
+        '<div style="margin: 2px 4px; ">'.
+        'Source: <a href="%s" style="color: #E00;" '.
+        'target="_blank">%s</a></div></div>'."\n";
+        return sprintf($codeblock, $umid, $umid, $matches[1], $string);
+      }
+    break;
     case (preg_match('/\.(wmv|avi|asx|mpg|mpeg)$/i', basename(strtolower($url["path"])))):
     case (preg_match('/^uploaded_videos\.php$/i', basename(strtolower($url["path"])))):
       $codeblock='<div style="width: 425px; border: solid 1px #000; '.
@@ -169,6 +191,25 @@ function _discuzcode_video_callback($matches) {
         return sprintf($codeblock, $args['i'], $matches[1], $matches[1]);
       }
     break;
+    case preg_match('/www\.dailymotion\.com/', strtolower($url["host"])):
+      if (preg_match('/^\/video\/.+?_.+?$/', $url["path"])) {
+        $id=preg_replace('/^\/video\/(.+?)_.+?$/', '$1', $url["path"]);
+        $codeblock='<div style="width: 420px; border: solid 1px #000; '.
+        'background: #CCC;"><div style="background: #000;">'.
+        '<object width="420" height="339">'.
+        '<param name="movie" value="http://www.dailymotion.com/swf/%s" />'.
+        '<param name="allowFullScreen" value="true" />'.
+        '<param name="allowScriptAccess" value="always" />'.
+        '<embed src="http://www.dailymotion.com/swf/%s" '.
+        'type="application/x-shockwave-flash" width="420" height="339" '.
+        'allowFullScreen="true" allowScriptAccess="always"></embed></object>'.
+        '</div>'.
+        '<div style="margin: 2px 4px;">'.
+        'Source: <a href="%s" style="color: #E00;" '.
+        'target="_blank">%s</a></div></div>'."\n";
+        return sprintf($codeblock, $id, $id, $matches[1], $matches[1]);
+      }
+    break;
     case preg_match('/[a-z]+?\.metacafe\.com/', strtolower($url["host"])):
       if (preg_match('/^\/watch\/\d+\/.+$/', $url["path"])) {
         $hash=preg_replace('/^\/watch\/(.+?)$/', '$1', $url["path"]);
@@ -184,7 +225,22 @@ function _discuzcode_video_callback($matches) {
         'Source: <a href="%s" style="color: #E00;" '.
         'target="_blank">%s</a></div></div>'."\n";
         return sprintf($codeblock, $hash, $matches[1], $matches[1]);
+       } elseif (preg_match('/^\/fplayer\/\d+\/.+\.swf$/', $url["path"])) {
+        $hash=preg_replace('/^\/fplayer\/(.+?)\.swf$/', '$1', $url["path"]);
+        $hash=preg_replace("/\/$/", '', $hash);
+        $codeblock='<div style="width: 400px; border: solid 1px #000; '.
+        'background: #CCC;"><div style="background: #000;">'.
+        '<embed src="http://www.metacafe.com/fplayer/%s.swf" '.
+        'width="400" height="345" wmode="transparent" '.
+        'pluginspage="http://www.macromedia.com/go/getflashplayer" '.
+        'type="application/x-shockwave-flash"></embed>'.
+        '</div>'.
+        '<div style="margin: 2px 4px;">'.
+        'Source: <a href="%s" style="color: #E00;" '.
+        'target="_blank">%s</a></div></div>'."\n";
+        return sprintf($codeblock, $hash, $matches[1], $matches[1]);
        }
+
     break;
     case preg_match('/[a-z]+?\.collegehumor\.com/', strtolower($url["host"])):
       if (preg_match('/^\/video\:\d+$/', $url["path"])) {
@@ -202,8 +258,43 @@ function _discuzcode_video_callback($matches) {
         'Source: <a href="%s" style="color: #E00;" '.
         'target="_blank">%s</a></div></div>'."\n";
         return sprintf($codeblock, $clipid, $clipid, $matches[1], $matches[1]);
+      } elseif (preg_match('/^\/moogaloop\/moogaloop\.swf$/', $url["path"])) {
+        parse_str($url["query"], $args); 
+        $clipid=$args['clip_id'];
+        $codeblock='<div style="width: 480px; border: solid 1px #000; '.
+        'background: #CCC;"><div style="background: #000;">'.
+        '<object type="application/x-shockwave-flash" '.
+        'data="http://www.collegehumor.com/moogaloop/'.
+        'moogaloop.swf?clip_id=%d&fullscreen=1" '.
+        'width="480" height="360" ><param name="allowfullscreen" value="true" />'.
+        '<param name="movie" quality="best" value="http://www.collegehumor.com/'.
+        'moogaloop/moogaloop.swf?clip_id=%d&fullscreen=1" /></object>'.
+        '</div>'.
+        '<div style="margin: 2px 4px;">'.
+        'Source: <a href="%s" style="color: #E00;" '.
+        'target="_blank">%s</a></div></div>'."\n";
+        $video_path = 'http://www.collegehumor.com/video:' . $clipid;
+        return sprintf($codeblock, $clipid, $clipid, $video_path, $video_path);
        }
+ 
     break; 
+    case preg_match('/www\.ku6\.com/', strtolower($url["host"])):
+      if (preg_match('/^\/show\/.+?\.html$/', $url["path"])) {
+        $vid=preg_replace('/^\/show\/(.+?)\.html$/', '$1', $url["path"]);
+        $codeblock='<div style="width: 460px; border: solid 1px #000; '.
+        'background: #CCC;"><div style="background: #000;">'.
+        '<embed src="http://img.ku6.com/common/V2.0.1.swf" '.
+        'flashvars="vid=%s" width="460" height="390" '.
+        'align="middle" allowScriptAccess="always" '.
+        'type="application/x-shockwave-flash" '.
+        'pluginspage="http://www.macromedia.com/go/getsflashplayer" /></object>'.
+        '</div>'.
+        '<div style="margin: 2px 4px;">'.
+        'Source: <a href="%s" style="color: #E00;" '.
+        'target="_blank">%s</a></div></div>'."\n";
+        return sprintf($codeblock, $vid, $vid, $matches[1], $matches[1]);
+      }
+    break;
     case preg_match('/[a-z]+?\.builderau\.com\.au/', strtolower($url["host"])):
       if (preg_match('/^\/video\/play\/\d+/', $url["path"])) {
         $vid=(int) preg_replace('/^\/video\/play\/(\d+?)/', '$1', $url["path"]);
