@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 4.2.3
+    @version 4.2.4
 **/
 
 /**
@@ -120,19 +120,31 @@ function _discuzcode_video_callback($matches) {
     case preg_match('/[a-z]+?\.youtube\.com/', strtolower($url["host"])):
     if (preg_match('/^\/watch$/', $url["path"])) {
       parse_str($url["query"], $args); 
-      $location = preg_replace('/([a-z]+?)\.youtube\.com/', 
-        '$1', strtolower($url["host"]));
-
-      $embed = sprintf('<object width="576" height="354">'.
-      '<param name="movie" value="http://%s.youtube.com/v/%s&hl=en&fs=1"></param>'.
+      $location = preg_replace('/([a-z]+?)\.youtube\.com/', '$1', strtolower($url["host"]));
+      $string = "http://{$location}.youtube.com/watch?v={$args['v']}";
+      $vid = $args["v"];
+      
+      // may add fmt specific dimension config here
+      if (isset($args["fmt"]) && is_numeric($args["fmt"])) {
+        $width = 576; $height = 354;
+        $query_str = "&hl=en&fs=1&ap=%2526fmt%3D".$args["fmt"];
+      } else {
+        $width = 576; $height = 354;
+        $query_str = "&hl=en&fs=1";
+      }
+      
+      $embed = sprintf('<object width="%d" height="%d">'.
+      '<param name="movie" value="http://%s.youtube.com/v/%s%s"></param>'.
       '<param name="allowFullScreen" value="true"></param>'.
       '<param name="allowscriptaccess" value="always"></param>'.
-      '<embed src="http://%s.youtube.com/v/%s&hl=en&fs=1" '.
+      '<embed src="http://%s.youtube.com/v/%s%s" '.
       'type="application/x-shockwave-flash" allowscriptaccess="always" '.
-      'allowfullscreen="true" width="576" height="354" quality="high"></embed>'.
-      '</object>',
-       $location, $args["v"], $location, $args["v"]);
-
+      'allowfullscreen="true" width="%d" height="%d" quality="high"></embed>'.
+      '</object>', $width, $height, 
+      $location, $vid, htmlspecialchars($query_str),
+      $location, $vid, $query_str,
+      $width, $height);
+      
       return _discuzcode_video_template($embed, $link, $string);
     }
     break;
