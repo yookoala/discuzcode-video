@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 4.2.5
+    @version 4.2.6
 **/
 
 /**
@@ -458,7 +458,7 @@ function _discuzcode_video_ignvideo_callback($matches) {
   "flashvars='%s&downloadURL=%s&allownetworking=\"all\"' ".
   "type='application/x-shockwave-flash' width='433' height='360'></embed>",
   $ids, $download_url);
-  return _discuzcode_video_template($embed, $link, $string, 433);
+  return _discuzcode_video_template($embed, $link, $string, 433, 380);
 }
 
 function _discuzcode_video_callback_yahoo_url($url=FALSE) {
