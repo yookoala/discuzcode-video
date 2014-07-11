@@ -10,7 +10,7 @@
     site is more hack prove and everybody is happy.
     
     @author Koala Yeung
-    @version 4.0
+    @version 4.1
 **/
 
 /**
@@ -29,11 +29,15 @@
             require_once(dirname(__FILE__).'/discuzcode-video/discuzcode.func.video.php');
         }
         if (function_exists('_discuzcode_video_callback')) {
+            // basic url to video support
             $message=preg_replace_callback("/\[url\](.+?)\[\/url\]/i", '_discuzcode_video_callback', $message);
-            $message=preg_replace_callback("/\[url=(https?|ftp){1}:\/\/([^\[\"']+?)\](.+?)\[\/url\]/is", '_discuzcode_video_c
-allback', $message);
-            $message=preg_replace_callback("/\[ignvideo\](.+?)\[\/ignvideo\]/i", '_discuzcode_video_ignvideo_callback', $mess
-age);
+            $message=preg_replace_callback("/\[url=(https?|ftp){1}:\/\/([^\[\"']+?)\](.+?)\[\/url\]/is", '_discuzcode_video_callback', $message);
+
+            // ignvideo
+            $message=preg_replace_callback("/\[ignvideo\](.+?)\[\/ignvideo\]/i", '_discuzcode_video_ignvideo_callback', $message);
+
+            // [video] bbcode support
+            $message=preg_replace_callback("/\[video\](.+?)\[\/video\]/is", "_discuzcode_video_html_callback", $message);
         } else {
           exit('Fatal Error! File "'.dirname(__FILE__).'/discuzcode-video/discuzcode.func.video.php'.'" is missed!');
         }
@@ -49,14 +53,23 @@ if(!defined('IN_DISCUZ')) {
 }
 
 
-function _discuzcode_video_template($embed, $link, $text, $width=425, $height=False) {
-  $heightcode=($height===False) ? "":"height: {$height}px";
-  $codeblock = <<<CODEBLOCK
+function _discuzcode_video_template($embed, $link=False, $text=False, $width=425, $height=False) {
+  $heightcode=($height===False) ? "":" height: {$height}px;";
+  
+  if (($link===False) AND ($text===False)) {
+    $codeblock = <<<CODEBLOCK
+<div class="videoblock" style="width: {$width}px;{$heightcode} border: solid 1px #000; background: #CCC;">
+  <div style="background: #000;">$embed</div>
+</div>
+CODEBLOCK;
+  } else {
+    $codeblock = <<<CODEBLOCK
 <div class="videoblock" style="width: {$width}px;{$heightcode} border: solid 1px #000; background: #CCC;">
   <div style="background: #000;">$embed</div>
   <div style="margin: 2px 4px; overflow-x: hidden;">Source: <a href="$link" style="color: #E00;" target="_blank">$text</a></div>
 </div>
 CODEBLOCK;
+  }
   return str_replace(array("\r", "\n  ", "\n"), array("", "", ""), $codeblock);
 }
 			
@@ -325,7 +338,7 @@ function _discuzcode_video_callback($matches) {
         $download_url    = sprintf("%s_flvlowwide.flv", preg_replace($regex, '$1', $url["path"]));
         $embed = sprintf("<embed src='http://videomedia.ign.com/ev/ev.swf' ".
         "flashvars='article_ID=%d&downloadURL=".
-        "http://moviesmovies.ign.com/movies/video/article/%d/%d/%s&allownetworking='all' ".
+        "http://moviesmovies.ign.com/movies/video/article/%d/%d/%s&allownetworking=\"all\" ".
         "type='application/x-shockwave-flash' width='433' height='360'></embed>",
         $article_id, $article_id_misc, $article_id, $download_url);
         return _discuzcode_video_template($embed, $link, $string, 433);
@@ -337,15 +350,17 @@ function _discuzcode_video_callback($matches) {
 }
 
 function _discuzcode_video_ignvideo_callback($matches) {
-  parse_str($matches[1], $args); 
-  $article_id      = $args["article_ID"];
+  parse_str(htmlspecialchars_decode($matches[1]), $args); 
+  $ids = (empty($args["article_ID"]))? "" : "article_ID={$args["article_ID"]}";
+  $ids = (empty($ids) && !empty($args["object_ID"])) ? 
+         "object_ID={$args["object_ID"]}" : $ids;
   $download_url    = $args["downloadURL"];
-  $link   = sprintf("http://movies.ign.com");
-  $string = $link;
+  $link    = "http://media.video.ign.com/ev/ev.html?dlURL=$download_url&$ids";
+  $string  = "http://www.ign.com";
   $embed = sprintf("<embed src='http://videomedia.ign.com/ev/ev.swf' ".
-  "flashvars='article_ID=%d&downloadURL=%s&allownetworking='all'".
+  "flashvars='%s&downloadURL=%s&allownetworking=\"all\"' ".
   "type='application/x-shockwave-flash' width='433' height='360'></embed>",
-  $article_id, $download_url);
+  $ids, $download_url);
   return _discuzcode_video_template($embed, $link, $string, 433);
 }
 
@@ -364,3 +379,37 @@ function _discuzcode_video_callback_yahoo($matches=FALSE) {
   return $_video_code[_discuzcode_video_callback_yahoo_url()];
 }
 
+function _discuzcode_video_html_callback($matches) {
+  // ** this function is experimental **
+  // handles [video] [/video] html embed directly
+ 
+  // use regex to remove possible 
+  // vulernable code in the video embed
+  
+  /** approach 1: identify and remove bad code **/
+  // remove javascripts
+  $regex_search[]  = "/\<(script.*?)\>/";
+  $regex_replace[] = "&lt;$1&gt;";
+  $regex_search[]  = "/\<(\/script)\>/";
+  $regex_replace[] = "&lt;$1&gt;";
+  
+  // remove tables, style and misc html code
+  $regex_search[]  = "/\<((meta|link).*?)\>/";
+  $regex_replace[] = "&lt;$1&gt;";
+  $regex_search[]  = "/\<((table|ul|ol|li|th|tr|td|div|style).*?)\>/";
+  $regex_replace[] = "&lt;$1&gt;";
+  $regex_search[]  = "/\<(\/(table|ul|ol|li|th|tr|td|div|style))\>/";
+  $regex_replace[] = "&lt;$1&gt;";
+  $regex_search[]  = "/\<(\/(body|html))\>/";
+  $regex_replace[] = "&lt;$1&gt;";
+  
+  /** approach 2: remove all but safe code **/
+  #$tags_allowed="embed|object|param";
+  #$regex_search[]  = "/\<((?!($tags_allowed)|(?!(\/($tags_allowed)))).*?)\>/";
+  #$regex_replace[] = "&lt;$2&gt;";
+
+  // process the video embed
+  $embed = trim(html_entity_decode($matches[1]));
+  $embed = preg_replace($regex_search, $regex_replace, $embed);
+  return "<div class=\"video\">$embed</div>";
+}
