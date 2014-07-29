@@ -124,11 +124,11 @@ function _discuzcode_video_callback($matches) {
       $url_seperator = $params["url_seperator"];
       $location      = $params["location"];
       $string        = $params["string"];
+      $query_params  = array();
 
       // calculating start time with "t" parameter
-      $start_fragment = "";
       if (!empty($params["t"])) {
-        preg_match_all("/(\d+)(h|m|s)/", $params["t"], $t_matches);
+        preg_match_all("/(\d+)(h|m|s|)/", $params["t"], $t_matches);
         //var_dump($t_matches); exit;
 
         $start = 0;
@@ -139,26 +139,12 @@ function _discuzcode_video_callback($matches) {
             $start += $t_matches[1][$i] * 60;
           } elseif ($t_matches[2][$i] == "s") {
             $start += $t_matches[1][$i];
+          } elseif ($t_matches[2][$i] == '') {
+            $start += $t_matches[1][$i];
           }
         }
-        if ($start != 0) $start_fragment = "&#038;start={$start}";
+        if ($start != 0) $query_params['start'] = $start;
       }
-
-      // new Youtube utilizes fragment part instead of query
-      /*
-      $fragment_regex = "/^\!v\=([a-zA-Z0-9]+).*$/";
-      if (preg_match($fragment_regex, $url["fragment"])) {
-        $vid = preg_replace($fragment_regex, '$1', $url["fragment"]);
-        $url_seperator = '#!';
-      } else {
-        // backward compatibility
-        parse_str($url["query"], $args);
-        if (isset($args["v"])) {
-          $vid = $args["v"];
-          $url_seperator = '?';
-        }
-      }
-      */
 
 
       // if vid exists in the link, and
@@ -166,44 +152,12 @@ function _discuzcode_video_callback($matches) {
       if (($vid !== FALSE) && youtube_can_embed($vid)) {
 
         // default query string and video dimension
-        $query_str = "&#038;hl=en&#038;fs=1&#038;rel=0{$start_fragment}";
+        $query_str = http_build_query($query_params);
+        if (!empty($query_str)) $query_str = '?'.$query_str;
         $width = 576; $height = 354;
         
-        // may add fmt specific dimension config here
-        if (isset($args["fmt"]) && is_numeric($args["fmt"])) {
-          $width = 576; $height = 354;
-          switch ($args["fmt"]) {
-            case 22:
-              $string .= " <span style='color: #000; font-size: 10pt;'>(HD quality)</span>";
-              $query_str .= "&#038;hd=1";
-              break;
-          }
-        } elseif (isset($args["hd"]) && ($args["hd"]==1)) {
-          $width = 576; $height = 354;
-           $string .= " <span style='color: #000; font-size: 10pt;'>(HD quality)</span>";
-          $query_str .= "&#038;hd=1";
-        }
-        /*
-        $embed = sprintf('<object width="%d" height="%d">'.
-        '<param name="movie" value="http://%s.youtube.com/v/%s%s"></param>'.
-        '<param name="allowFullScreen" value="true"></param>'.
-        '<param name="allowscriptaccess" value="always"></param>'.
-        '<embed src="http://%s.youtube.com/v/%s%s" '.
-        'type="application/x-shockwave-flash" allowscriptaccess="always" '.
-        'allowfullscreen="true" width="%d" height="%d" quality="high"></embed>'.
-        '</object>', $width, $height, 
-        $location, $vid, $query_str,
-        $location, $vid, $query_str,
-        $width, $height);
-        */
-        /*
-        <iframe width="853" height="480" src="//www.youtube.com/embed/q64hTNEj6KQ" frameborder="0" allowfullscreen></iframe>
-        $embed = sprintf('<iframe width="640" height="360" '.
-        'src="https://www.youtube.com/embed/videoseries?list=%s" '.
-        'frameborder="0" allowfullscreen></iframe>', $lid);
-        */
-        $embed = '<iframe width="'.$width.'" height="'.$height.'" '.
-        'src="//www.youtube.com/embed/'.$vid.'" '.
+       $embed = '<iframe width="'.$width.'" height="'.$height.'" '.
+        'src="//www.youtube.com/embed/'.$vid.$query_str.'" '.
         'frameborder="0" allowfullscreen></iframe>';
         
         return _discuzcode_video_template($embed, $link, $string);
