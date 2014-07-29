@@ -192,20 +192,6 @@ function _discuzcode_video_callback($matches) {
         $string = "http://{$location}.youtube.com{$url["path"]}?list={$args['list']}";
       }
 
-      /*
-      $embed = sprintf('<object width="%d" height="%d"><param name="movie" '.
-      'value="http://%s.youtube.com/p/%s%s"></param>'.
-      '<param name="allowFullScreen" value="true"></param>'.
-      '<param name="allowscriptaccess" value="always"></param>'.
-      '<embed src="http://%s.youtube.com/p/%s%s" '.
-      'type="application/x-shockwave-flash" width="%d" height="%d" allowscriptaccess="always" '.
-      'allowfullscreen="true"></embed></object>', 
-      $width, $height,
-      $location, $lid, $query_str,
-      $location, $lid, $query_str,
-      $width, $height);
-      */
-
       $embed = sprintf('<iframe width="640" height="360" '.
       'src="https://www.youtube.com/embed/videoseries?list=%s" '.
       'frameborder="0" allowfullscreen></iframe>', $lid);
@@ -247,33 +233,12 @@ function _discuzcode_video_callback($matches) {
       if ($args !== FALSE) {
         if (isset($args["v"])) {
           $vid = $args["v"];
-          /*
-          $embed = sprintf('<object width="576" height="324" >'.
-          '<param name="allowfullscreen" value="true" />'.
-          '<param name="allowscriptaccess" value="always" />'.
-          '<param name="movie" value="http://www.facebook.com/v/%s" />'.
-          '<embed src="http://www.facebook.com/v/%s" type="application/x-shockwave-flash" '.
-          'allowscriptaccess="always" allowfullscreen="true" width="576" height="324"></embed>'.
-          '</object>', $vid, $vid);
-          */
           $embed = sprintf('<iframe src="https://www.facebook.com/video/embed?video_id=%s" width="854" height="480" frameborder="0"></iframe>', $vid);
 
           return _discuzcode_video_template($embed, $link, $string);
         }
       }
     break;
-    /*
-    case (strtolower($url["host"])=='blip.tv'):
-    case preg_match('/[a-z0-9]+?\.blip\.tv/i', strtolower($url["host"])):
-      $regex = "/^\/file\/([0-9]+)\/$/";
-      if (preg_match($regex, $url["path"])) {
-        $vid = preg_replace($regex, "$1", $url["path"]); 
-        $embed = sprintf('<iframe src="%s/#video_player" width="625" height="480" frameborder="0" scrolling="no"><a href="%s">%s</a></iframe>', 
-          $link, $link, $string);
-        return _discuzcode_video_template($embed, $link, $string);
-      }
-    break;
-    */
     case (strtolower($url["host"])=='vids.myspace.com'):
       parse_str($url["query"], $args);
       if (preg_match('/index\.cfm/', $url["path"]) && 
@@ -367,16 +332,6 @@ function _discuzcode_video_callback($matches) {
     case (strtolower($url["host"])=='tudou.com'):
     if (preg_match('/^\/programs\/view\/.+?\/$/', $url["path"])) {
       $video_id=preg_replace('/^\/programs\/view\/(.+?)\/$/', '$1', $url["path"]);
-      /*
-      $embed = sprintf('<object width="480" height="380">'.
-      '<param name="movie" value="http://www.tudou.com/v/%s"></param>'.
-      '<param name="allowScriptAccess" value="always"></param>'.
-      '<param name="wmode" value="opaque"></param>'.
-      '<embed src="http://www.tudou.com/v/%s" type="application/x-shockwave-flash"'.
-      ' width="480" height="380" allowFullScreen="true" wmode="opaque" allowScriptAccess="always"></embed>'.
-      '</object>', $video_id, $video_id);
-      */
-
       $embed = sprintf('<embed src="http://www.tudou.com/v/%s/v.swf" '.
          'type="application/x-shockwave-flash" allowscriptaccess="always" '.
          'allowfullscreen="true" wmode="opaque" width="480" height="400"></embed>',
@@ -483,20 +438,7 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
             $width = 800;
           }
 
-          /*
-          $embed = sprintf('<object width="%d" height="%d">'.
-          '<param name="allowfullscreen" value="true" />'.
-          '<param name="allowscriptaccess" value="always" />'.
-          '<param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=%d&amp;'.
-          'server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;'.
-          'color=ffffff&amp;fullscreen=1" />'.
-          '<embed src="http://vimeo.com/moogaloop.swf?clip_id=%d&amp;server=vimeo.com&amp;'.
-          'show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" '.
-          'type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always"'.
-          ' width="%d" height="%d"></embed>'.
-          '</object>', $width, $height, $vid, $vid, $width, $height);
-          */
-          $embed = sprintf('<iframe src="//player.vimeo.com/video/%s" width="%d" height="%d" '.
+         $embed = sprintf('<iframe src="//player.vimeo.com/video/%s" width="%d" height="%d" '.
             'frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
             $vid, $width, $height);
 
@@ -540,13 +482,7 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
     case preg_match('/www\.kickstarter\.com/', strtolower($url["host"])):
       if (preg_match('/^\/projects\/.+?$/', $url["path"])) {
         $path=preg_replace('/^\/projects\/(.+?)$/', '$1', $url["path"]);
-        /*
-        $embed=sprintf('<iframe width="640" height="480" '.
-          'src="//www.kickstarter.com/projects/%s/widget/video.html" '.
-          'frameborder="0" scrolling="no"> </iframe>',
-          $path);
-        */
-        $embed=sprintf('<iframe width="640" height="480" '.
+       $embed=sprintf('<iframe width="640" height="480" '.
           'src="//www.kickstarter.com/projects/%s/widget/video.html" '.
           'frameborder="0" scrolling="no"> </iframe> '.
           '<iframe width="220" height="480" '.
