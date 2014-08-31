@@ -224,6 +224,10 @@ function _discuzcode_video_callback($matches) {
         parse_str($url["query"], $args); 
       } elseif (preg_match("/^\!\/video\/video\.php\?/", $url["fragment"])) {
         parse_str(preg_replace("/^\!\/video\/video\.php\?/", "", $url["fragment"]), $args);
+      } elseif ($url["path"] == "/video.php") {
+        parse_str($url["query"], $args); 
+      } elseif (preg_match("/^\!\/video\.php\?/", $url["fragment"])) {
+        parse_str(preg_replace("/^\!\/video\/video\.php\?/", "", $url["fragment"]), $args);
       } elseif ($url["path"] == "/photo.php") {
         parse_str($url["query"], $args);
       } elseif (preg_match("/^\!\/photo\.php\?/", $url["fragment"])) {
