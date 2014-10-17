@@ -237,9 +237,11 @@ function _discuzcode_video_callback($matches) {
       if ($args !== FALSE) {
         if (isset($args["v"])) {
           $vid = $args["v"];
-          $embed = sprintf('<iframe src="https://www.facebook.com/video/embed?video_id=%s" width="854" height="480" frameborder="0"></iframe>', $vid);
+          $embed = sprintf('<div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/zh_HK/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));</script>
+<div class="fb-post" data-href="https://www.facebook.com/video.php?v=%s" data-width="466"></div>
+', $vid);
 
-          return _discuzcode_video_template($embed, $link, $string);
+          return _discuzcode_video_template($embed, $link, $string, 466);
         }
       }
     break;
