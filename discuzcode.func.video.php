@@ -374,6 +374,14 @@ function _discuzcode_video_callback($matches) {
       }
     }
     break;
+    case (strtolower($url["host"])=='www.56.com'):
+    if (preg_match('/^\/u\d+\/v_(\w+)\.html$/', $url["path"], $path_matches)) {
+      $vid = $path_matches[1];
+      $embed = '<embed src="http://player.56.com/cpm_'.$vid.'.swf" type="application/x-shockwave-flash" '.
+        'width="560" height="470" allowfullscreen="true" allownetworking="all" allowscriptaccess="always"></embed>';
+      return _discuzcode_video_template($embed, $link, $string);
+    }
+    break;
     case (strtolower($url["host"])=='hk.video.yahoo.com'):
       $contents=file_get_contents($matches[1]);
       _discuzcode_video_callback_yahoo_url($matches[1]);
