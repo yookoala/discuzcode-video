@@ -603,7 +603,7 @@ function _discuzcode_video_template($embed, $link=False, $text=False, $width=Fal
   preg_match("/width=\"([0-9]+)\"/", $embed, $result); $width_default = 480;
   $width=($width===False) ? (!empty($result) ? $result[1] : $width_default) : $width;
   $heightcode=($height===False) ? "":" height: {$height}px;";
-  $source_text = t("source"); 
+  $source_text = t("Source");
  
   if (($link===False) AND ($text===False)) {
     $codeblock = <<<CODEBLOCK
