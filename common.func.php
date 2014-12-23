@@ -94,25 +94,6 @@ function _discuzcode_video_callback($matches) {
         }
       }
     break;
-    case (strtolower($url["host"])=='vids.myspace.com'):
-      parse_str($url["query"], $args);
-      if (preg_match('/index\.cfm/', $url["path"]) && 
-          isset($args['videoid']) && 
-          ($args['fuseaction'] == 'vids.individual')) {
-        $embed = sprintf('<object width="500px" height="424px" >'.
-         '<param name="allowFullScreen" value="true"/>'.
-         '<param name="wmode" value="transparent"/>'.
-         '<param name="movie" '.
-         'value="//mediaservices.myspace.com/services/media/'.
-         'embed.aspx/m=%d,t=1,mt=video"/>'.
-         '<embed src="//mediaservices.myspace.com/services/media/'.
-         'embed.aspx/m=%d,t=1,mt=video" '.
-         'width="500" height="424" allowFullScreen="true" '.
-         'type="application/x-shockwave-flash" wmode="transparent"></embed>'.
-         '</object>', $args['videoid'], $args['videoid']);
-        return _discuzcode_video_template($embed, $link, $string);
-      }
-    break;
     case (strtolower($url["host"])=='nicovideo.jp'):
     case preg_match('/[a-z]+?\.nicovideo\.jp/', strtolower($url["host"])):
       if (preg_match('/\/watch\/sm\d+/', $url["path"])) {
