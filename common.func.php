@@ -58,19 +58,6 @@ function _discuzcode_video_callback($matches) {
       return _discuzcode_video_template(
         $embed['html'], $embed['link'], $string, $embed['width'], $embed['height']);
     break;
-    case (strtolower($url["host"])=='www.ted.com'):
-      if (preg_match("/^\/talks[\/\w]*\/(.+?)\./", $url["path"], $path_matches)) {
-       
-        $vid = $path_matches[1];
-        
-        $embed = sprintf('<iframe width="640" height="360" '.
-        'src="//embed.ted.com/talks/%s.html" '.
-        'frameborder="0" scrolling="no" '.
-        'webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>', $vid);
-        return _discuzcode_video_template($embed, $link, $string);
-
-     }
-    break;
     case (strtolower($url["host"])=='www.twitvid.com'):
       if (preg_match("/^\/[A-Z0-9]{5}?/", $url["path"])) {
         $vid = preg_replace("/^\/([A-Z0-9]{5})?/", "$1", $url["path"]);
