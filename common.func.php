@@ -718,42 +718,6 @@ function _discuzcode_get_ted_video_stat($link) {
 
 
 /**
-* helper, generates ted.com embed codes
-*/
-function _discuzcode_format_ted_embed_by_video_url($video_stat, $width, $height) {
-  $regex = '/^http:\/\/download\.ted\.com\/talks\/(.+?)\-(\d+k)\.mp4$/';
-
-  if (preg_match($regex, $video_stat["url"])) {
-    $vw = $width  - 14;
-    $vh = $height - 86;
-    $flashvars = "vu={$video_stat["url"]}&su={$video_stat["image"]}&vw={$vw}&vh={$vh}&ti={$video_stat["talk_id"]}";
-
-    $embed = "<object width=\"{$width}\" height=\"{$height}\">".
-      "<param name=\"movie\" value=\"//video.ted.com/assets/player/swf/EmbedPlayer.swf\"></param>".
-      "<param name=\"allowFullScreen\" value=\"true\" />".
-      "<param name=\"allowScriptAccess\" value=\"always\"/>".
-      "<param name=\"wmode\" value=\"transparent\"></param>".
-      "<param name=\"bgColor\" value=\"#ffffff\"></param>".
-      "<param name=\"flashvars\"".
-      " value=\"{$flashvars}\" />".
-      "<embed src=\"//video.ted.com/assets/player/swf/EmbedPlayer.swf\"".
-      " pluginspace=\"http://www.macromedia.com/go/getflashplayer\"".
-      " type=\"application/x-shockwave-flash\"".
-      " wmode=\"transparent\"".
-      " bgColor=\"#ffffff\"".
-      " width=\"{$width}\" height=\"{$height}\"".
-      " allowFullScreen=\"true\" allowScriptAccess=\"always\"".
-      " flashvars=\"{$flashvars}\"></embed>".
-      "</object>";
-
-    return $embed;
-  }
-  return FALSE;
-
-}
-
-
-/**
 * helper function. get the url of this file
 */
 function _discuzcode_video_script_url() {
