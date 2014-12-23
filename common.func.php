@@ -128,18 +128,6 @@ function _discuzcode_video_callback($matches) {
       }
     break;
 
-    case (strtolower($url["host"])=='video.google.com'):
-      parse_str($url["query"], $args);
-      $args["hl"] = empty($args["hl"]) ? "zh-TW" : $args["hl"];
-      $embed= sprintf('<embed id="VideoPlayback" '.
-       'src="//video.google.com/googleplayer.swf?docid=%s&hl=%s&fs=true" '.
-       'style="width:600px;height:489px" '.
-       'allowFullScreen="true" '.
-       'allowScriptAccess="always" '.
-       'type="application/x-shockwave-flash">'.
-       '</embed>', $args["docid"], $args["hl"]);
-      return _discuzcode_video_template($embed, $link, $string, 600);
-    break;
     case (preg_match('/^(player|v)\.youku\.com$/i', $url["host"])):
 
       if (strtolower($url["host"])=='player.youku.com') {
