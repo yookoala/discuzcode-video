@@ -13,7 +13,7 @@
  * @author Koala Yeung
  * @version 7.x
 **/
-
+error_reporting(e_all ^ e_notice);   ini_set('display_errors', '1');
 /**
  * ------------
  * Installation
@@ -48,4 +48,5 @@ if(!defined('IN_DISCUZ')) {
 }
 
 // include the files
+require_once __DIR__ . '/lib/widgetfy/autoload.php';
 require_once __DIR__ . '/common.func.php';
