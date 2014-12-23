@@ -163,7 +163,7 @@ function _discuzcode_video_callback($matches) {
         return _discuzcode_video_template($embed, $link, $string);
       } else {
         if (youtube_can_embed_error() == "") {
-          $embed = "<a target=\"_blank\" href=\"{$link}\"><img src=\"http://img.youtube.com/vi/{$vid}/0.jpg\" style=\"width: 576px\"/></a>";
+          $embed = "<a target=\"_blank\" href=\"{$link}\"><img src=\"//img.youtube.com/vi/{$vid}/0.jpg\" style=\"width: 576px\"/></a>";
           return _discuzcode_video_template($embed, $link, $string, 576);
         } else {
           $embed = sprintf("<div style='padding: 4px 10px; color: #EEE;'>".
@@ -183,13 +183,13 @@ function _discuzcode_video_callback($matches) {
       if (isset($args['p'])) {
       
         $lid = $args['p'];
-        $string = "http://{$location}.youtube.com{$url["path"]}?p={$lid}";
+        $string = "//{$location}.youtube.com{$url["path"]}?p={$lid}";
       
       } elseif (isset($args['list']) and preg_match("/^PL/", $args['list'])) {
       
         //$lid = substr($args['list'], 2);
         $lid = $args['list'];
-        $string = "http://{$location}.youtube.com{$url["path"]}?list={$args['list']}";
+        $string = "//{$location}.youtube.com{$url["path"]}?list={$args['list']}";
       }
 
       $embed = sprintf('<iframe width="640" height="360" '.
@@ -204,7 +204,7 @@ function _discuzcode_video_callback($matches) {
         $vid = $path_matches[1];
         
         $embed = sprintf('<iframe width="640" height="360" '.
-        'src="http://embed.ted.com/talks/%s.html" '.
+        'src="//embed.ted.com/talks/%s.html" '.
         'frameborder="0" scrolling="no" '.
         'webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>', $vid);
         return _discuzcode_video_template($embed, $link, $string);
@@ -214,7 +214,9 @@ function _discuzcode_video_callback($matches) {
     case (strtolower($url["host"])=='www.twitvid.com'):
       if (preg_match("/^\/[A-Z0-9]{5}?/", $url["path"])) {
         $vid = preg_replace("/^\/([A-Z0-9]{5})?/", "$1", $url["path"]);
-        $embed = sprintf('<iframe title="Twitvid video player" class="twitvid-player" type="text/html" width="624" height="468" src="http://www.twitvid.com/embed.php?guid=%s&autoplay=0" frameborder="0"></iframe>', $vid);
+        $embed = sprintf('<iframe title="Twitvid video player" class="twitvid-player" '.
+          'type="text/html" width="624" height="468" '.
+          'src="//www.twitvid.com/embed.php?guid=%s&autoplay=0" frameborder="0"></iframe>', $vid);
         return _discuzcode_video_template($embed, $link, $string);
       }
     break;
@@ -254,9 +256,9 @@ function _discuzcode_video_callback($matches) {
          '<param name="allowFullScreen" value="true"/>'.
          '<param name="wmode" value="transparent"/>'.
          '<param name="movie" '.
-         'value="http://mediaservices.myspace.com/services/media/'.
+         'value="//mediaservices.myspace.com/services/media/'.
          'embed.aspx/m=%d,t=1,mt=video"/>'.
-         '<embed src="http://mediaservices.myspace.com/services/media/'.
+         '<embed src="//mediaservices.myspace.com/services/media/'.
          'embed.aspx/m=%d,t=1,mt=video" '.
          'width="500" height="424" allowFullScreen="true" '.
          'type="application/x-shockwave-flash" wmode="transparent"></embed>'.
@@ -270,7 +272,7 @@ function _discuzcode_video_callback($matches) {
         $vid = preg_replace('/\/watch\/sm(\d+)/', '$1', $url["path"]);
         $locale = preg_replace('/([a-z]+?)\.nicovideo\.jp/', '$1', strtolower($url["host"]));
         $embed = sprintf('<iframe width="648" height="217" '.
-        'src="http://tw.nicovideo.jp/thumb/sm%s" scrolling="no" '.
+        'src="//tw.nicovideo.jp/thumb/sm%s" scrolling="no" '.
         'style="border:solid 1px #CCC;" frameborder="0"></iframe>', $vid);
         if (($locale == "tw") || ($string !== $link)) return _discuzcode_video_template($embed, $link, $string, 650, 220);
         return _discuzcode_video_template($embed, FALSE, FALSE, 650, 220);
@@ -282,12 +284,12 @@ function _discuzcode_video_callback($matches) {
         $vid = preg_replace('/^\/watch\/(\w+)/', '$1', $url["path"]);
         $embed = sprintf('<object width="615" height="512" id="veohFlashPlayer" '.
           'name="veohFlashPlayer"><param name="movie" '.
-          'value="http://www.veoh.com/swf/webplayer/WebPlayer.swf?'.
+          'value="//www.veoh.com/swf/webplayer/WebPlayer.swf?'.
           'version=AFrontend.5.7.0.1396&permalinkId=%s&'.
           'player=videodetailsembedded&videoAutoPlay=0&id=anonymous">'.
           '</param><param name="allowFullScreen" value="true">'.
           '</param><param name="allowscriptaccess" value="always"></param>'.
-          '<embed src="http://www.veoh.com/swf/webplayer/WebPlayer.swf?'.
+          '<embed src="//www.veoh.com/swf/webplayer/WebPlayer.swf?'.
           'version=AFrontend.5.7.0.1396&permalinkId=%s&'.
           'player=videodetailsembedded&videoAutoPlay=0&id=anonymous" '.
           'type="application/x-shockwave-flash" '.
@@ -302,7 +304,7 @@ function _discuzcode_video_callback($matches) {
       parse_str($url["query"], $args);
       $args["hl"] = empty($args["hl"]) ? "zh-TW" : $args["hl"];
       $embed= sprintf('<embed id="VideoPlayback" '.
-       'src="http://video.google.com/googleplayer.swf?docid=%s&hl=%s&fs=true" '.
+       'src="//video.google.com/googleplayer.swf?docid=%s&hl=%s&fs=true" '.
        'style="width:600px;height:489px" '.
        'allowFullScreen="true" '.
        'allowScriptAccess="always" '.
@@ -396,9 +398,9 @@ function _discuzcode_video_callback($matches) {
         'id="gtembed" width="480" height="392">'.
         '<param name="allowScriptAccess" value="sameDomain" />'.
         '<param name="allowFullScreen" value="true" />'.
-        '<param name="movie" value="http://www.gametrailers.com/remote_wrap.php?umid=%d"/> '.
+        '<param name="movie" value="//www.gametrailers.com/remote_wrap.php?umid=%d"/> '.
         '<param name="quality" value="high" />'.
-        '<embed src="http://www.gametrailers.com/remote_wrap.php?umid=%d" swLiveConnect="true" '.
+        '<embed src="//www.gametrailers.com/remote_wrap.php?umid=%d" swLiveConnect="true" '.
         'name="gtembed" align="middle" allowScriptAccess="sameDomain" allowFullScreen="true" '.
         'quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" '.
         'type="application/x-shockwave-flash" width="480" height="394"></embed></object>',
@@ -437,7 +439,7 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         // try to retrieve api respond with the help of cache
         $cache = _local_file_cache_get("cache_discuzcode_vimeoapi", $vid);
         if ($cache["has_cache"] === FALSE) {
-          $api_respond = file_get_contents("http://vimeo.com/api/v2/video/$vid.php");
+          $api_respond = file_get_contents("//vimeo.com/api/v2/video/$vid.php");
           $api_respond = unserialize($api_respond);
           _local_file_cache_set("cache_discuzcode_vimeoapi", $vid, $api_respond);
         } else {
@@ -470,12 +472,12 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         $height     = 338; // original 225
         $embed = "<object width='$width' height='$height' ".
         "id='flash58974' classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000'>".
-        "<param name='movie' value='http://flash.sonypictures.com/video/universalplayer/sharedPlayer.swf'></param>".
+        "<param name='movie' value='//flash.sonypictures.com/video/universalplayer/sharedPlayer.swf'></param>".
         "<param name='allowFullscreen' value='true'></param>".
         "<param name='allowNetworking' value='all'></param>".
         "<param name='allowScriptAccess' value='always'></param>".
         "<param name='flashvars' value='clip=$vid&feed=http%3A//www.sonypictures.com/previews/movies/$movie_hash.xml'></param>".
-        "<embed src='http://flash.sonypictures.com/video/universalplayer/sharedPlayer.swf' ".
+        "<embed src='//flash.sonypictures.com/video/universalplayer/sharedPlayer.swf' ".
         "width='$width' height='$height' type='application/x-shockwave-flash' ".
         "flashvars='clip=$vid&feed=http%3A//www.sonypictures.com/previews/movies/$movie_hash.xml' ".
         "allowNetworking='all' allowscriptaccess='always' allowfullscreen='true'></embed></object>";
@@ -510,10 +512,10 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       if (preg_match('/^\/video\/.+?_.+?$/', $url["path"])) {
         $id=preg_replace('/^\/video\/(.+?)_.+?$/', '$1', $url["path"]);
         $embed=sprintf('<object width="420" height="339">'.
-        '<param name="movie" value="http://www.dailymotion.com/swf/%s" />'.
+        '<param name="movie" value="//www.dailymotion.com/swf/%s" />'.
         '<param name="allowFullScreen" value="true" />'.
         '<param name="allowScriptAccess" value="always" />'.
-        '<embed src="http://www.dailymotion.com/swf/%s" '.
+        '<embed src="//www.dailymotion.com/swf/%s" '.
         'type="application/x-shockwave-flash" width="420" height="339" '.
         'allowFullScreen="true" allowScriptAccess="always"></embed></object>',
         $id, $id);
@@ -524,7 +526,7 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       if (preg_match('/^\/watch\/\d+\/.+$/', $url["path"])) {
         $hash=preg_replace('/^\/watch\/(.+?)$/', '$1', $url["path"]);
         $hash=preg_replace("/\/$/", '', $hash);
-        $embed=sprintf('<embed src="http://www.metacafe.com/fplayer/%s.swf" '.
+        $embed=sprintf('<embed src="//www.metacafe.com/fplayer/%s.swf" '.
         'width="400" height="345" wmode="transparent" '.
         'pluginspage="http://www.macromedia.com/go/getflashplayer" '.
         'type="application/x-shockwave-flash"></embed>', $hash);
@@ -532,7 +534,7 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       } elseif (preg_match('/^\/fplayer\/\d+\/.+\.swf$/', $url["path"])) {
         $hash=preg_replace('/^\/fplayer\/(.+?)\.swf$/', '$1', $url["path"]);
         $hash=preg_replace("/\/$/", '', $hash);
-        $embed=sprintf('<embed src="http://www.metacafe.com/fplayer/%s.swf" '.
+        $embed=sprintf('<embed src="//www.metacafe.com/fplayer/%s.swf" '.
         'width="400" height="345" wmode="transparent" '.
         'pluginspage="http://www.macromedia.com/go/getflashplayer" '.
         'type="application/x-shockwave-flash"></embed>', $hash);
@@ -543,10 +545,10 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       if (preg_match('/^\/video\:\d+$/', $url["path"])) {
         $clipid=preg_replace('/^\/video\:(\d+?)$/', '$1', $url["path"]);
         $embed=sprintf('<object type="application/x-shockwave-flash" '.
-        'data="http://www.collegehumor.com/moogaloop/'.
+        'data="//www.collegehumor.com/moogaloop/'.
         'moogaloop.swf?clip_id=%d&fullscreen=1" '.
         'width="480" height="360" ><param name="allowfullscreen" value="true" />'.
-        '<param name="movie" quality="best" value="http://www.collegehumor.com/'.
+        '<param name="movie" quality="best" value="//www.collegehumor.com/'.
         'moogaloop/moogaloop.swf?clip_id=%d&fullscreen=1" /></object>',
         $clipid, $clipid);
         return _discuzcode_video_template($embed, $link, $string, 480);
@@ -557,10 +559,10 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         $string = ($string === $link) ? $video_path : $string;
         $link = $video_path;
         $embed=sprintf('<object type="application/x-shockwave-flash" '.
-        'data="http://www.collegehumor.com/moogaloop/'.
+        'data="//www.collegehumor.com/moogaloop/'.
         'moogaloop.swf?clip_id=%d&fullscreen=1" '.
         'width="480" height="360" ><param name="allowfullscreen" value="true" />'.
-        '<param name="movie" quality="best" value="http://www.collegehumor.com/'.
+        '<param name="movie" quality="best" value="//www.collegehumor.com/'.
         'moogaloop/moogaloop.swf?clip_id=%d&fullscreen=1" /></object>',
         $clipid, $clipid);
         return _discuzcode_video_template($embed, $link, $string, 480);
@@ -570,7 +572,7 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       $regex='/^\/video\/(\d+)\/(.+?)$/';
       if (preg_match($regex, $url["path"])) {
         $clipid=preg_replace($regex, '$1', $url["path"]);
-        $embed=sprintf('<iframe src="http://www.dorkly.com/e/%s" '.
+        $embed=sprintf('<iframe src="//www.dorkly.com/e/%s" '.
           'width="600" height="338" frameborder="0" '.
           'webkitAllowFullScreen allowFullScreen></iframe>',
           $clipid);
@@ -593,9 +595,9 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       if (preg_match('/^\/video\/play\/\d+/', $url["path"])) {
         $vid=(int) preg_replace('/^\/video\/play\/(\d+?)/', '$1', $url["path"]);
         $embed=sprintf('<object width="400" height="330"><param name="movie" '.
-        'value="http://www.builderau.com.au/video/embed/%d"></param></param>'.
+        'value="//www.builderau.com.au/video/embed/%d"></param></param>'.
         '<param name="allowfullscreen" value="true"></param>'.
-        '<embed src="http://www.builderau.com.au/video/embed/%d" '.
+        '<embed src="//www.builderau.com.au/video/embed/%d" '.
         'type="application/x-shockwave-flash" allowfullscreen="true" '.
         'width="400" height="330"></embed></object>', $vid, $vid);
         return _discuzcode_video_template($embed, $link, $string, 400);
@@ -610,9 +612,9 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         'height="392"><param name="allowScriptAccess" value="sameDomain" /> '.
         '<param name="allowFullScreen" value="true" /> '.
         '<param name="movie" '.
-        'value="http://www.gametrailers.com/remote_wrap.php?mid=%d"/>'.
+        'value="//www.gametrailers.com/remote_wrap.php?mid=%d"/>'.
         '<param name="quality" value="high" /> '.
-        '<embed src="http://www.gametrailers.com/remote_wrap.php?mid=%d" '.
+        '<embed src="//www.gametrailers.com/remote_wrap.php?mid=%d" '.
         'swLiveConnect="true" name="gtembed" align="middle" '.
         'allowScriptAccess="sameDomain" allowFullScreen="true" '.
         'quality="high" pluginspage="http://www.macromedia.com/go/getflash'.
@@ -641,7 +643,7 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       'width="400" height="300" autostart="false" '.
       'controls="imagewindow" nojava="true" '.
       'console="c1183760810807" '.
-      'pluginspage="http://www.real.com/"></embed><br>'.
+      'pluginspage="//www.real.com/"></embed><br>'.
       '<embed type="audio/x-pn-realaudio-plugin" '.
       'src="%s" '.
       'width="400" height="26" autostart="false" '.
@@ -666,9 +668,9 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         $article_id      = preg_replace($regex, '$1', $url["path"]);
         $article_id_misc = substr($article_id, 0, 3);
         $download_url    = sprintf("%s_flvlowwide.flv", preg_replace($regex, '$1', $url["path"]));
-        $embed = sprintf("<embed src='http://videomedia.ign.com/ev/ev.swf' ".
+        $embed = sprintf("<embed src='//videomedia.ign.com/ev/ev.swf' ".
         "flashvars='article_ID=%d&downloadURL=".
-        "http://moviesmovies.ign.com/movies/video/article/%d/%d/%s&allownetworking=\"all\" ".
+        "//moviesmovies.ign.com/movies/video/article/%d/%d/%s&allownetworking=\"all\" ".
         "type='application/x-shockwave-flash' width='433' height='360'></embed>",
         $article_id, $article_id_misc, $article_id, $download_url);
         return _discuzcode_video_template($embed, $link, $string, 433);
@@ -677,8 +679,8 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         $object_id = preg_replace($regex, '$1', $url["path"]);
         $vgroup_id = preg_replace($regex, '$2', $url["path"]);
         $embed = sprintf("<object id='ignplayer' width='480' height='270' ".
-        "data='http://media.ign.com/ev/embed.swf' type='application/x-shockwave-flash'>".
-        "<param name='movie' value='http://media.ign.com/ev/embed.swf' />".
+        "data='//media.ign.com/ev/embed.swf' type='application/x-shockwave-flash'>".
+        "<param name='movie' value='//media.ign.com/ev/embed.swf' />".
         "<param name='allowfullscreen' value='true' />".
         "<param name='allowscriptaccess' value='always' />".
         "<param name='bgcolor' value='#000000' />".
@@ -744,7 +746,7 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
     break;
     case strtolower($url["host"]) == 'vlog.xuite.net':
       if (preg_match('/^\/play\/(\w+\=\=)$/', $url['path'], $path_matches)) {
-        $embed = '<iframe marginwidth="0" marginheight="0" src="http://vlog.xuite.net/embed/'.
+        $embed = '<iframe marginwidth="0" marginheight="0" src="//vlog.xuite.net/embed/'.
           $path_matches[1].
           '?ar=0&as=0" width="640" height="360" scrolling="no" frameborder="0"></iframe>';
         return _discuzcode_video_template($embed, $link, $string, 640, 360);
@@ -774,7 +776,7 @@ function _discuzcode_video_ignvideo_callback($matches) {
   $download_url    = $args["downloadURL"];
   $link    = "http://media.video.ign.com/ev/ev.html?dlURL=$download_url&$ids";
   $string  = "http://www.ign.com";
-  $embed = sprintf("<embed src='http://videomedia.ign.com/ev/ev.swf' ".
+  $embed = sprintf("<embed src='//videomedia.ign.com/ev/ev.swf' ".
   "flashvars='%s&downloadURL=%s&allownetworking=\"all\"' ".
   "type='application/x-shockwave-flash' width='433' height='360'></embed>",
   $ids, $download_url);
@@ -1072,13 +1074,13 @@ function _discuzcode_get_ted_video_stat($link) {
       $current_error_reporting = error_reporting(); error_reporting(E_ERROR | E_PARSE);
 
       $vid = preg_replace($regex, '$1', $video_stat["url"]);
-      $image = "http://images.ted.com/images/ted/tedindex/embed-posters/{$vid}-embed.jpg";
+      $image = "//images.ted.com/images/ted/tedindex/embed-posters/{$vid}-embed.jpg";
 
       if (($fh = fopen($image, "r")) !== FALSE) {
         $video_stat["image"] = $image;
       } else {
         $vid = str_replace('_', '-', $vid);
-        $image = "http://images.ted.com/images/ted/tedindex/embed-posters/{$vid}.embed_thumbnail.jpg";
+        $image = "//images.ted.com/images/ted/tedindex/embed-posters/{$vid}.embed_thumbnail.jpg";
         fclose($fh);
         if (($fh = fopen($image, "r")) !== FALSE) {
           $video_stat["image"] = $image;
@@ -1109,14 +1111,14 @@ function _discuzcode_format_ted_embed_by_video_url($video_stat, $width, $height)
     $flashvars = "vu={$video_stat["url"]}&su={$video_stat["image"]}&vw={$vw}&vh={$vh}&ti={$video_stat["talk_id"]}";
 
     $embed = "<object width=\"{$width}\" height=\"{$height}\">".
-      "<param name=\"movie\" value=\"http://video.ted.com/assets/player/swf/EmbedPlayer.swf\"></param>".
+      "<param name=\"movie\" value=\"//video.ted.com/assets/player/swf/EmbedPlayer.swf\"></param>".
       "<param name=\"allowFullScreen\" value=\"true\" />".
       "<param name=\"allowScriptAccess\" value=\"always\"/>".
       "<param name=\"wmode\" value=\"transparent\"></param>".
       "<param name=\"bgColor\" value=\"#ffffff\"></param>".
       "<param name=\"flashvars\"".
       " value=\"{$flashvars}\" />".
-      "<embed src=\"http://video.ted.com/assets/player/swf/EmbedPlayer.swf\"".
+      "<embed src=\"//video.ted.com/assets/player/swf/EmbedPlayer.swf\"".
       " pluginspace=\"http://www.macromedia.com/go/getflashplayer\"".
       " type=\"application/x-shockwave-flash\"".
       " wmode=\"transparent\"".
