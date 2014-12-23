@@ -223,37 +223,6 @@ function _discuzcode_video_callback($matches) {
 href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       return _discuzcode_video_template($embed, $link, $string, 600);
     break;
-    case preg_match('/vimeo\.com/', strtolower($url["host"])):
-      $regex = '/^\/([0-9]+)$/';
-      if (preg_match($regex, $url["path"])) {
-        $vid = preg_replace($regex, "$1", $url["path"]);
-
-        // try to retrieve api respond with the help of cache
-        $cache = _local_file_cache_get("cache_discuzcode_vimeoapi", $vid);
-        if ($cache["has_cache"] === FALSE) {
-          $api_respond = file_get_contents("//vimeo.com/api/v2/video/$vid.php");
-          $api_respond = unserialize($api_respond);
-          _local_file_cache_set("cache_discuzcode_vimeoapi", $vid, $api_respond);
-        } else {
-          $api_respond = $cache["value"];
-        }
-
-        if (($api_respond !== FALSE) && !empty($api_respond)) {
-          $width  = !empty($api_respond[0]["width"]) ? $api_respond[0]["width"] : 600;
-          $height = !empty($api_respond[0]["height"]) ? $api_respond[0]["height"] : 340;
-          if ($width > 800) {
-            $height = ceil((800 / $width) * $height);
-            $width = 800;
-          }
-
-         $embed = sprintf('<iframe src="//player.vimeo.com/video/%s" width="%d" height="%d" '.
-            'frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
-            $vid, $width, $height);
-
-          return _discuzcode_video_template($embed, $link, $string, $width);
-        }
-      }
-    break;
     case preg_match('/www\.sonypictures\.com/', strtolower($url["host"])):
       // http://www.sonypictures.com/previews/movies/thekaratekid/clips/1580/
       $regex = '/^\/previews\/movies\/(.+?)\/clips\/([0-9]+|[0-9]+\/)$/';
