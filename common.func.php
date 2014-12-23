@@ -276,17 +276,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         return _discuzcode_video_template($embed, $link, $string, $width);
       }
     break;
-    case preg_match('/[a-z]+?\.liveleak\.com/', strtolower($url["host"])):
-      if (preg_match('/^\/view$/', $url["path"])) {
-        parse_str($url["query"], $args);
-        $embed=sprintf('<embed src="http://www.liveleak.com/player.swf" '.
-        'width="450" height="370" type="application/x-shockwave-flash" '.
-        'pluginspage="http://www.macromedia.com/go/getflashplayer" '.
-        'flashvars="autostart=false&token=%s" scale="showall" '.
-        'name="index"></embed>', $args['i']);
-        return _discuzcode_video_template($embed, $link, $string, 450);
-      }
-    break;
     case preg_match('/www\.kickstarter\.com/', strtolower($url["host"])):
       if (preg_match('/^\/projects\/.+?$/', $url["path"])) {
         $path=preg_replace('/^\/projects\/(.+?)$/', '$1', $url["path"]);
@@ -298,20 +287,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
           'frameborder="0" scrolling="no"> </iframe>',
           $path, $path);
         return $embed;
-      }
-    break;
-    case preg_match('/www\.dailymotion\.com/', strtolower($url["host"])):
-      if (preg_match('/^\/video\/.+?_.+?$/', $url["path"])) {
-        $id=preg_replace('/^\/video\/(.+?)_.+?$/', '$1', $url["path"]);
-        $embed=sprintf('<object width="420" height="339">'.
-        '<param name="movie" value="//www.dailymotion.com/swf/%s" />'.
-        '<param name="allowFullScreen" value="true" />'.
-        '<param name="allowScriptAccess" value="always" />'.
-        '<embed src="//www.dailymotion.com/swf/%s" '.
-        'type="application/x-shockwave-flash" width="420" height="339" '.
-        'allowFullScreen="true" allowScriptAccess="always"></embed></object>',
-        $id, $id);
-        return _discuzcode_video_template($embed, $link, $string, 420);
       }
     break;
     case preg_match('/[a-z]+?\.metacafe\.com/', strtolower($url["host"])):
@@ -393,26 +368,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         'type="application/x-shockwave-flash" allowfullscreen="true" '.
         'width="400" height="330"></embed></object>', $vid, $vid);
         return _discuzcode_video_template($embed, $link, $string, 400);
-      }
-    break;
-    case preg_match('/[a-z]+?\.gametrailers\.com/', strtolower($url["host"])):
-      if (preg_match('/^\/player\/\d+?\.html$/', $url["path"])) {
-        $id=preg_replace('/^\/player\/(\d+?)\.html$/', '$1', $url["path"]);
-        $embed=sprintf('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" '.
-        'codebase="http://download.macromedia.com/pub/shockwave/cabs/'.
-        'flash/swflash.cab#version=8,0,0,0" id="gtembed" width="480" '.
-        'height="392"><param name="allowScriptAccess" value="sameDomain" /> '.
-        '<param name="allowFullScreen" value="true" /> '.
-        '<param name="movie" '.
-        'value="//www.gametrailers.com/remote_wrap.php?mid=%d"/>'.
-        '<param name="quality" value="high" /> '.
-        '<embed src="//www.gametrailers.com/remote_wrap.php?mid=%d" '.
-        'swLiveConnect="true" name="gtembed" align="middle" '.
-        'allowScriptAccess="sameDomain" allowFullScreen="true" '.
-        'quality="high" pluginspage="http://www.macromedia.com/go/getflash'.
-        'player" type="application/x-shockwave-flash" width="480" '.
-        'height="392"></embed></object>', $id, $id);
-        return _discuzcode_video_template($embed, $link, $string, 480);
       }
     break;
     case preg_match('/share\.youthwant\.com\.tw/', strtolower($url["host"])):
