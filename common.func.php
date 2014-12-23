@@ -571,34 +571,6 @@ function _discuzcode_string_trim($string, $length) {
   return $string;
 }
 
-/**
-* helper function
-* file cache for api call results
-*/
-function _local_file_cache_get($prefix, $id) {
-  $cache_filename = str_replace('/', '', $prefix."_".md5($id));
-  if (file_exists("/tmp/$cache_filename")) {
-    return array(
-      "has_cache"=>TRUE,
-       "value"=>unserialize(file_get_contents("/tmp/$cache_filename")));
-  }
-  return array("has_cache"=>FALSE);
-}
-
-/**
-* helper function
-* file cache for api call results
-*/
-function _local_file_cache_set($prefix, $id, $value) {
-  $result = FALSE;
-  $cache_filename = str_replace('/', '', $prefix."_".md5($id));
-  $fh = fopen("/tmp/$cache_filename", "w+");
-  if ($fh !== FALSE) $result = fwrite($fh, serialize($value));
-  fclose($fh);
-  chmod("/tmp/$cache_filename", 0600);
-  return $result;
-}
-
 /********************************************************
 * language
 *********************************************************/
