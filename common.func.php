@@ -206,24 +206,6 @@ function _discuzcode_video_callback($matches) {
       preg_replace_callback('/\<input.+?value\=\'(\<object.+?)\'/', '_discuzcode_video_callback_yahoo', $contents);
       return _discuzcode_video_template(_discuzcode_video_callback_yahoo(), $matches[1], $string);
     break;
-    case preg_match('/^www\.gametrailers\.com$/', strtolower($url["host"])):
-      if (preg_match('/^\/player\/usermovies\/[0-9].+\.html$/', $url["path"])) {
-        $umid=preg_replace('/^\/player\/usermovies\/([0-9].+)\.html$/', '$1', $url["path"]);
-        $embed=sprintf('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" '.
-        'codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" '.
-        'id="gtembed" width="480" height="392">'.
-        '<param name="allowScriptAccess" value="sameDomain" />'.
-        '<param name="allowFullScreen" value="true" />'.
-        '<param name="movie" value="//www.gametrailers.com/remote_wrap.php?umid=%d"/> '.
-        '<param name="quality" value="high" />'.
-        '<embed src="//www.gametrailers.com/remote_wrap.php?umid=%d" swLiveConnect="true" '.
-        'name="gtembed" align="middle" allowScriptAccess="sameDomain" allowFullScreen="true" '.
-        'quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" '.
-        'type="application/x-shockwave-flash" width="480" height="394"></embed></object>',
-        $umid, $umid);
-        return _discuzcode_video_template($embed, $link, $string, 480);
-      }
-    break;
     case (strtolower($url["scheme"]) == "mms"):
     case (preg_match('/\.(wmv|avi|asx|mpg|mpeg)$/i', basename(strtolower($url["path"])))):
     case (preg_match('/^uploaded_videos\.php$/i', basename(strtolower($url["path"])))):
