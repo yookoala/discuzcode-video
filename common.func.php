@@ -200,12 +200,6 @@ function _discuzcode_video_callback($matches) {
       return _discuzcode_video_template($embed, $link, $string);
     }
     break;
-    case (strtolower($url["host"])=='hk.video.yahoo.com'):
-      $contents=file_get_contents($matches[1]);
-      _discuzcode_video_callback_yahoo_url($matches[1]);
-      preg_replace_callback('/\<input.+?value\=\'(\<object.+?)\'/', '_discuzcode_video_callback_yahoo', $contents);
-      return _discuzcode_video_template(_discuzcode_video_callback_yahoo(), $matches[1], $string);
-    break;
     case (strtolower($url["scheme"]) == "mms"):
     case (preg_match('/\.(wmv|avi|asx|mpg|mpeg)$/i', basename(strtolower($url["path"])))):
     case (preg_match('/^uploaded_videos\.php$/i', basename(strtolower($url["path"])))):
@@ -645,26 +639,6 @@ function _discuzcode_video_html_callback($matches) {
 * helper functions
 *********************************************************/
 
-/**
-* helper function for embeding yahoo video
-*/
-function _discuzcode_video_callback_yahoo_url($url=FALSE) {
-  static $_url;
-  if ($url!==FALSE) $_url=$url;
-  return $_url;
-}
-
-/**
-* helper function for embeding yahoo video
-*/
-function _discuzcode_video_callback_yahoo($matches=FALSE) {
-  static $_video_code;
-  if (!isset($_video_code)) $_video_code=array();
-  if (!isset($_video_code[_discuzcode_video_callback_yahoo_url()])) {
-    if (!empty($matches[1])) $_video_code[_discuzcode_video_callback_yahoo_url()]=$matches[1];
-  }
-  return $_video_code[_discuzcode_video_callback_yahoo_url()];
-}
 
 /**
 * helper
