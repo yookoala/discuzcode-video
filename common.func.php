@@ -289,25 +289,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         return $embed;
       }
     break;
-    case preg_match('/[a-z]+?\.metacafe\.com/', strtolower($url["host"])):
-      if (preg_match('/^\/watch\/\d+\/.+$/', $url["path"])) {
-        $hash=preg_replace('/^\/watch\/(.+?)$/', '$1', $url["path"]);
-        $hash=preg_replace("/\/$/", '', $hash);
-        $embed=sprintf('<embed src="//www.metacafe.com/fplayer/%s.swf" '.
-        'width="400" height="345" wmode="transparent" '.
-        'pluginspage="http://www.macromedia.com/go/getflashplayer" '.
-        'type="application/x-shockwave-flash"></embed>', $hash);
-        return _discuzcode_video_template($embed, $link, $string, 400);
-      } elseif (preg_match('/^\/fplayer\/\d+\/.+\.swf$/', $url["path"])) {
-        $hash=preg_replace('/^\/fplayer\/(.+?)\.swf$/', '$1', $url["path"]);
-        $hash=preg_replace("/\/$/", '', $hash);
-        $embed=sprintf('<embed src="//www.metacafe.com/fplayer/%s.swf" '.
-        'width="400" height="345" wmode="transparent" '.
-        'pluginspage="http://www.macromedia.com/go/getflashplayer" '.
-        'type="application/x-shockwave-flash"></embed>', $hash);
-        return _discuzcode_video_template($embed, $link, $string, 400);
-      }
-    break;
     case preg_match('/[a-z]+?\.collegehumor\.com/', strtolower($url["host"])):
       if (preg_match('/^\/video\:\d+$/', $url["path"])) {
         $clipid=preg_replace('/^\/video\:(\d+?)$/', '$1', $url["path"]);
