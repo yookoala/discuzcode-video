@@ -750,6 +750,13 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         return _discuzcode_video_template($embed, $link, $string, 640, 360);
       }
     break;
+    case strtolower($url["host"]) == 'store.steampowered.com':
+      if (preg_match('/^\/app\/(\d+)[\/]*$/', $url['path'], $path_matches)) {
+        $embed = '<iframe src="//store.steampowered.com/widget/'.
+          $path_matches[1].'/" width="646" height="190" frameborder="0"></iframe>';
+        return _discuzcode_video_template($embed, $link, $string, 646, 190);
+      }
+    break;
   }
   
   return $matches[0];
