@@ -58,30 +58,6 @@ function _discuzcode_video_callback($matches) {
       return _discuzcode_video_template(
         $embed['html'], $link, $string, $embed['width'], $embed['height']);
     break;
-    case (preg_match('/^(player|v)\.youku\.com$/i', $url["host"])):
-
-      if (strtolower($url["host"])=='player.youku.com') {
-        //$regex = '/^\/player\.php\/sid\/([a-zA-Z0-9]+)\=\/v.swf$/';
-        $regex = '/^\/player\.php\/sid\/([a-zA-Z0-9]+)(\=\/v\.swf|\/v\.swf)$/';
-      } elseif (strtolower($url["host"])=='v.youku.com') {
-        $regex = '/^\/v_show\/id_(.+?)(\=|)\.html/';
-      }
-
-      if (preg_match($regex, $url["path"])) {
-        $sid = preg_replace($regex, '$1', $url["path"]);
-        if (strtolower($url["host"])=='player.youku.com') {
-          if ($string == $link) 
-            $string = "http://v.youku.com/v_show/id_{$sid}=.html";
-          $link = "http://v.youku.com/v_show/id_{$sid}=.html";
-        }
-        $embed = sprintf('<embed '.
-        'src="http://player.youku.com/player.php/sid/%s=/v.swf" '.
-        'quality="high" width="480" height="400" align="middle" '.
-        'allowScriptAccess="sameDomain" '.
-        'type="application/x-shockwave-flash"></embed>', $sid);
-        return _discuzcode_video_template($embed, $link, $string, 480);
-      }
-    break;
     case (strtolower($url["host"])=='www.tudou.com'):
     case (strtolower($url["host"])=='tudou.com'):
     if (preg_match('/^\/programs\/view\/.+?\/$/', $url["path"])) {
