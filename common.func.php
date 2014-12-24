@@ -134,43 +134,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         return _discuzcode_video_template($embed, $link, $string, 480);
       }
     break;
-    case strtolower($url["host"]) == 'tv.on.cc':
-    
-      // parse flashvars of tv.on.cc player
-      parse_str($url['query'], $args);
-      $t = floor(microtime(TRUE) * 1000);
-      $mid = substr($args['i'], 0, -1) . strtolower(substr($args['i'], -1, 1));
-      $flashvars = array(
-        'today' => date('Ymdhis'),
-        'tvc'   => 1,
-        'playMode' => 0,
-        'autoplay' => 0,
-        'bumper' => 0,
-        'theme' => 'white',
-        'mid'   => $mid,
-        'mdate' => $args['d'],
-        'msect' => $args['s'],
-        'ssect' => $args['ss'],
-        'tvcCount' => 0,
-      );
-      $flashvars_query = http_build_query($flashvars);
-
-      // compile the embed code
-      $embed = sprintf('<object id="player_flash" width="600" height="381" '.
-        'name="player_flash" type="application/x-shockwave-flash" '.
-        'data="http://tv.on.cc/player.swf?t=%d&msect=%d&ssect=%d" '.
-        'style="visibility: visible;">'.
-        '<param name="allowFullScreen" value="true">'.
-        '<param name="allowScriptAccess" value="always">'.
-        '<param name="wmode" value="opaque">'.
-        '<param name="hasPriority" value="true">'.
-        '<param name="flashvars" '.
-        'value="%s">
-      </object>',
-        $t, $flashvars['msect'], $flashvars['ssect'], $flashvars_query
-      );
-      return _discuzcode_video_template($embed, $link, $string, 600);
-    break;
   }
   
   return $matches[0];
