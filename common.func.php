@@ -19,10 +19,6 @@ function _discuzcode_video_replace($message) {
   $message=preg_replace_callback("/\[url=(https?|ftp){1}:\/\/([^\[\"']+?)\](.+?)\[\/url\]/is",
     '_discuzcode_video_callback', $message);
 
-  // ignvideo
-  $message=preg_replace_callback("/\[ignvideo\](.+?)\[\/ignvideo\]/i",
-    '_discuzcode_video_ignvideo_callback', $message);
-
   return $message;
 }
 
@@ -95,25 +91,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
   }
   
   return $matches[0];
-}
-
-/**
-* interface for discuz or other program to use
-* help turns [ignvideo] tags to ign video
-*/
-function _discuzcode_video_ignvideo_callback($matches) {
-  parse_str(htmlspecialchars_decode($matches[1]), $args); 
-  $ids = (empty($args["article_ID"]))? "" : "article_ID={$args["article_ID"]}";
-  $ids = (empty($ids) && !empty($args["object_ID"])) ? 
-         "object_ID={$args["object_ID"]}" : $ids;
-  $download_url    = $args["downloadURL"];
-  $link    = "http://media.video.ign.com/ev/ev.html?dlURL=$download_url&$ids";
-  $string  = "http://www.ign.com";
-  $embed = sprintf("<embed src='//videomedia.ign.com/ev/ev.swf' ".
-  "flashvars='%s&downloadURL=%s&allownetworking=\"all\"' ".
-  "type='application/x-shockwave-flash' width='433' height='360'></embed>",
-  $ids, $download_url);
-  return _discuzcode_video_template($embed, $link, $string, 433, 380);
 }
 
 /**
