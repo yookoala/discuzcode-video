@@ -58,15 +58,6 @@ function _discuzcode_video_callback($matches) {
       return _discuzcode_video_template(
         $embed['html'], $link, $string, $embed['width'], $embed['height']);
     break;
-    case (strtolower($url["host"])=='www.twitvid.com'):
-      if (preg_match("/^\/[A-Z0-9]{5}?/", $url["path"])) {
-        $vid = preg_replace("/^\/([A-Z0-9]{5})?/", "$1", $url["path"]);
-        $embed = sprintf('<iframe title="Twitvid video player" class="twitvid-player" '.
-          'type="text/html" width="624" height="468" '.
-          'src="//www.twitvid.com/embed.php?guid=%s&autoplay=0" frameborder="0"></iframe>', $vid);
-        return _discuzcode_video_template($embed, $link, $string);
-      }
-    break;
     case (preg_match('/^(player|v)\.youku\.com$/i', $url["host"])):
 
       if (strtolower($url["host"])=='player.youku.com') {
