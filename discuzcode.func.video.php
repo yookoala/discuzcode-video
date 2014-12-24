@@ -12,8 +12,8 @@
  * 
  * @author Koala Yeung
  * @version 7.x
-**/
-error_reporting(e_all ^ e_notice);   ini_set('display_errors', '1');
+ **/
+
 /**
  * ------------
  * Installation
@@ -23,12 +23,9 @@ error_reporting(e_all ^ e_notice);   ini_set('display_errors', '1');
  * 3) open discuzcode.func.php
  * 4) find a function named 'discuzcode'
  * 5) inside the function, find a line that start with: 'if(!$bbcodeoff && $allowbbcode) {'
- * 6) before the line you found in step 5, add these line
+ * 6) before the line you found in step 5, add this line
  * 
- *     // koala hack here for youtube and other video support
  *     require_once(dirname(__FILE__).'/discuzcode-video/discuzcode.func.video.php');
- *     $message = _discuzcode_video_replace($message);
- *     // koala hack ended
  * 
  * 7) save and exit
  * 8) copy this folder to the <your installation dir>/include
@@ -50,3 +47,6 @@ if(!defined('IN_DISCUZ')) {
 // include the files
 require_once __DIR__ . '/lib/widgetfy/autoload.php';
 require_once __DIR__ . '/common.func.php';
+
+// replace links with embed code
+$message = _discuzcode_video_replace($message);
