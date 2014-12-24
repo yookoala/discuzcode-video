@@ -268,20 +268,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         return _discuzcode_video_template($embed, $link, $string, 400);
       }
     break;
-    case preg_match('/share\.youthwant\.com\.tw/', strtolower($url["host"])):
-      parse_str($url["query"], $args);
-      if ($url["path"]==='/sh.php' && isset($args["id"])) {
-        $embed=sprintf('<object classid=clsid:D27CDB6E-AE6D-11CF-96B8-444553540000 '.
-        'codebase=http://download.macromedia.com/pub/shockwave/cabs'.
-        '/flash/swflash.cab#version=6,0,40,0 width=450 height=359 >'.
-        '<param name=movie value=http://share.youthwant.com.tw/r?m=%d />'.
-        '<param name=wmode value=transparent />'.
-        '<embed src=http://share.youthwant.com.tw/r?m=%d '.
-        'type=application/x-shockwave-flash wmode=transparent '.
-        'width=450 height=359 /></object>', $args["id"], $args["id"]);
-        return _discuzcode_video_template($embed, $link, $string, 450);
-      }
-    break;
     case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url["path"])))): 
       $embed=sprintf('<embed type="audio/x-pn-realaudio-plugin" '.
       'src="%s" '.
