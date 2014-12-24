@@ -58,46 +58,6 @@ function _discuzcode_video_callback($matches) {
       return _discuzcode_video_template(
         $embed['html'], $link, $string, $embed['width'], $embed['height']);
     break;
-    case (strtolower($url["host"])=='www.tudou.com'):
-    case (strtolower($url["host"])=='tudou.com'):
-    if (preg_match('/^\/programs\/view\/.+?\/$/', $url["path"])) {
-      $video_id=preg_replace('/^\/programs\/view\/(.+?)\/$/', '$1', $url["path"]);
-      $embed = sprintf('<embed src="http://www.tudou.com/v/%s/v.swf" '.
-         'type="application/x-shockwave-flash" allowscriptaccess="always" '.
-         'allowfullscreen="true" wmode="opaque" width="480" height="400"></embed>',
-         $video_id
-      );
-      return _discuzcode_video_template($embed, $link, $string, 480);
-    } elseif (preg_match('/^\/playlist\/id\/.+?\/$/', $url["path"])) {
-      $video_id=preg_replace('/^\/playlist\/id\/(.+?)\/$/', '$1', $url["path"]);
-      $embed = sprintf('<object width="488" height="423"><param name="movie" '.
-      'value="http://www.tudou.com/player/playlist.swf?lid=%s"></param>'.
-      '<param name="allowscriptaccess" value="always">'.
-      '<embed src="http://www.tudou.com/player/playlist.swf?lid=%s" '.
-      'type="application/x-shockwave-flash" width="488" height="423"></embed>'.
-      '</object>', $video_id, $video_id);
-      return _discuzcode_video_template($embed, $link, $string);
-      
-    } elseif (preg_match('/^\/playlist\/playindex.do$/', $url["path"])) {
-      parse_str($url["query"], $args);
-      if (!empty($args['lid'])) {
-        $embed = sprintf('<object width="546" height="472">'.
-        '<param name="movie" value="http://www.tudou.com/l/%s"></param>'.
-        '<param name="allowFullScreen" value="true"></param>'.
-        '<param name="allowscriptaccess" value="always"></param>'.
-        '<param name="wmode" value="opaque"></param>'.
-        '<embed src="http://www.tudou.com/l/%s"'.
-        ' type="application/x-shockwave-flash"'.
-        ' allowscriptaccess="always"'.
-        ' allowfullscreen="true"'.
-        ' wmode="opaque"'.
-        ' width="546" height="472"></embed>'.
-        '</object>', $args["lid"], $args["lid"]);
-
-        return _discuzcode_video_template($embed, $link, $string);
-      }
-    }
-    break;
     case (strtolower($url["scheme"]) == "mms"):
     case (preg_match('/\.(wmv|avi|asx|mpg|mpeg)$/i', basename(strtolower($url["path"])))):
     case (preg_match('/^uploaded_videos\.php$/i', basename(strtolower($url["path"])))):
