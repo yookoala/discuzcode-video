@@ -296,34 +296,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       'console="c1183760810807"></embed>', $link, $link);
       return _discuzcode_video_template($embed, $link, $string, 400);
     break;
-    case preg_match('/movies\.ign\.com/', strtolower($url["host"])):
-      if (preg_match('/^\/dor\/articles\/[0-9]+\/.+?\/videos\/.+?\.html$/', $url["path"])) {
-        $regex = '/^\/dor\/articles\/([0-9]+)\/.+?\/videos\/(.+?)\.html$/';
-        $article_id      = preg_replace($regex, '$1', $url["path"]);
-        $article_id_misc = substr($article_id, 0, 3);
-        $download_url    = sprintf("%s_flvlowwide.flv", preg_replace($regex, '$1', $url["path"]));
-        $embed = sprintf("<embed src='//videomedia.ign.com/ev/ev.swf' ".
-        "flashvars='article_ID=%d&downloadURL=".
-        "//moviesmovies.ign.com/movies/video/article/%d/%d/%s&allownetworking=\"all\" ".
-        "type='application/x-shockwave-flash' width='433' height='360'></embed>",
-        $article_id, $article_id_misc, $article_id, $download_url);
-        return _discuzcode_video_template($embed, $link, $string, 433);
-      } elseif (preg_match('/^\/dor\/objects\/[0-9]+\/.+?\/videos\/.+?\.html$/', $url["path"])) {
-        $regex = '/^\/dor\/objects\/([0-9]+)\/.+?\/videos\/(.+?)\.html$/';
-        $object_id = preg_replace($regex, '$1', $url["path"]);
-        $vgroup_id = preg_replace($regex, '$2', $url["path"]);
-        $embed = sprintf("<object id='ignplayer' width='480' height='270' ".
-        "data='//media.ign.com/ev/embed.swf' type='application/x-shockwave-flash'>".
-        "<param name='movie' value='//media.ign.com/ev/embed.swf' />".
-        "<param name='allowfullscreen' value='true' />".
-        "<param name='allowscriptaccess' value='always' />".
-        "<param name='bgcolor' value='#000000' />".
-        "<param name='flashvars' value='vgroup=%s&object=%s'/>".
-        "</object>",
-        $vgroup_id, $object_id);
-        return _discuzcode_video_template($embed, $link, $string);
-      }
-    break;
     case preg_match('/you\.video\.sina\.com\.cn/', strtolower($url["host"])):
       $regex = '/^\/b\/([0-9]+?)-([0-9]+?)\.html$/';
       if (preg_match($regex, $url["path"])) {
