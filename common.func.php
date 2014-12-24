@@ -233,19 +233,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         return _discuzcode_video_template($embed, $link, $string, $width);
       }
     break;
-    case preg_match('/www\.kickstarter\.com/', strtolower($url["host"])):
-      if (preg_match('/^\/projects\/.+?$/', $url["path"])) {
-        $path=preg_replace('/^\/projects\/(.+?)$/', '$1', $url["path"]);
-       $embed=sprintf('<iframe width="640" height="480" '.
-          'src="//www.kickstarter.com/projects/%s/widget/video.html" '.
-          'frameborder="0" scrolling="no"> </iframe> '.
-          '<iframe width="220" height="480" '.
-          'src="//www.kickstarter.com/projects/%s/widget/card.html" '.
-          'frameborder="0" scrolling="no"> </iframe>',
-          $path, $path);
-        return $embed;
-      }
-    break;
     case preg_match('/[a-z]+?\.collegehumor\.com/', strtolower($url["host"])):
       if (preg_match('/^\/video\:\d+$/', $url["path"])) {
         $clipid=preg_replace('/^\/video\:(\d+?)$/', '$1', $url["path"]);
