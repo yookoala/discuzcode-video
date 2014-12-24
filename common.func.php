@@ -167,18 +167,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         return _discuzcode_video_template($embed, $link, $string, $width);
       }
     break;
-    case preg_match('/www\.ku6\.com/', strtolower($url["host"])):
-      if (preg_match('/^\/show\/.+?\.html$/', $url["path"])) {
-        $vid=preg_replace('/^\/show\/(.+?)\.html$/', '$1', $url["path"]);
-        $embed=sprintf('<embed src="http://img.ku6.com/common/V2.0.1.swf" '.
-        'flashvars="vid=%s" width="460" height="390" '.
-        'align="middle" allowScriptAccess="always" '.
-        'type="application/x-shockwave-flash" '.
-        'pluginspage="http://www.macromedia.com/go/getsflashplayer" /></object>',
-        $vid, $vid);
-        return _discuzcode_video_template($embed, $link, $string, 460);
-      }
-    break;
     case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url["path"])))): 
       $embed=sprintf('<embed type="audio/x-pn-realaudio-plugin" '.
       'src="%s" '.
