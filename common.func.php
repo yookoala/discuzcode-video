@@ -56,7 +56,7 @@ function _discuzcode_video_callback($matches) {
 
     case ($embed = Widgetarian\Widgetfy\Translator::translate($link)) !=NULL:
       return _discuzcode_video_template(
-        $embed['html'], $embed['link'], $string, $embed['width'], $embed['height']);
+        $embed['html'], $link, $string, $embed['width'], $embed['height']);
     break;
     case (strtolower($url["host"])=='www.twitvid.com'):
       if (preg_match("/^\/[A-Z0-9]{5}?/", $url["path"])) {
@@ -92,18 +92,6 @@ function _discuzcode_video_callback($matches) {
 
           return _discuzcode_video_template($embed, $link, $string, 466);
         }
-      }
-    break;
-    case (strtolower($url["host"])=='nicovideo.jp'):
-    case preg_match('/[a-z]+?\.nicovideo\.jp/', strtolower($url["host"])):
-      if (preg_match('/\/watch\/sm\d+/', $url["path"])) {
-        $vid = preg_replace('/\/watch\/sm(\d+)/', '$1', $url["path"]);
-        $locale = preg_replace('/([a-z]+?)\.nicovideo\.jp/', '$1', strtolower($url["host"]));
-        $embed = sprintf('<iframe width="648" height="217" '.
-        'src="//tw.nicovideo.jp/thumb/sm%s" scrolling="no" '.
-        'style="border:solid 1px #CCC;" frameborder="0"></iframe>', $vid);
-        if (($locale == "tw") || ($string !== $link)) return _discuzcode_video_template($embed, $link, $string, 650, 220);
-        return _discuzcode_video_template($embed, FALSE, FALSE, 650, 220);
       }
     break;
     case (strtolower($url["host"])=='veoh.com'):
