@@ -67,33 +67,6 @@ function _discuzcode_video_callback($matches) {
         return _discuzcode_video_template($embed, $link, $string);
       }
     break;
-    case (strtolower($url["host"])=='www.facebook.com'):
-      $args = FALSE;
-      if ($url["path"] == "/video/video.php") {
-        parse_str($url["query"], $args); 
-      } elseif (preg_match("/^\!\/video\/video\.php\?/", $url["fragment"])) {
-        parse_str(preg_replace("/^\!\/video\/video\.php\?/", "", $url["fragment"]), $args);
-      } elseif ($url["path"] == "/video.php") {
-        parse_str($url["query"], $args); 
-      } elseif (preg_match("/^\!\/video\.php\?/", $url["fragment"])) {
-        parse_str(preg_replace("/^\!\/video\/video\.php\?/", "", $url["fragment"]), $args);
-      } elseif ($url["path"] == "/photo.php") {
-        parse_str($url["query"], $args);
-      } elseif (preg_match("/^\!\/photo\.php\?/", $url["fragment"])) {
-        parse_str(preg_replace("/^\!\/photo\.php\?/", "", $url["fragment"]), $args);
-      }
-
-      if ($args !== FALSE) {
-        if (isset($args["v"])) {
-          $vid = $args["v"];
-          $embed = sprintf('<div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/zh_HK/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));</script>
-<div class="fb-post" data-href="https://www.facebook.com/video.php?v=%s" data-width="466"></div>
-', $vid);
-
-          return _discuzcode_video_template($embed, $link, $string, 466);
-        }
-      }
-    break;
     case (strtolower($url["host"])=='veoh.com'):
     case preg_match('/[a-z]+?\.veoh.com/', strtolower($url["host"])):
       if (preg_match('/^\/watch\/\w+$/', $url["path"])) {
