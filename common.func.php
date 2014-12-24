@@ -51,13 +51,14 @@ function _discuzcode_video_callback($matches) {
   }
   
   $url=parse_url(str_replace('&amp;', '&', $link));
-  
-  switch (TRUE) {
 
-    case ($embed = Widgetarian\Widgetfy\Translator::translate($link)) !=NULL:
-      return _discuzcode_video_template(
-        $embed['html'], $link, $string, $embed['width'], $embed['height']);
-    break;
+  // use Widgetfy to determine embed code
+  if (($embed = Widgetarian\Widgetfy\Site::translate($link)) !=NULL) {
+    return _discuzcode_video_template(
+      $embed['html'], $link, $string, $embed['width'], $embed['height']);
+  }
+
+  switch (TRUE) {
     case (strtolower($url["scheme"]) == "mms"):
     case (preg_match('/\.(wmv|avi|asx|mpg|mpeg)$/i', basename(strtolower($url["path"])))):
     case (preg_match('/^uploaded_videos\.php$/i', basename(strtolower($url["path"])))):
