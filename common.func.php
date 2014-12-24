@@ -81,28 +81,6 @@ function _discuzcode_video_callback($matches) {
 href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       return _discuzcode_video_template($embed, $link, $string, 600);
     break;
-    case preg_match('/www\.sonypictures\.com/', strtolower($url["host"])):
-      // http://www.sonypictures.com/previews/movies/thekaratekid/clips/1580/
-      $regex = '/^\/previews\/movies\/(.+?)\/clips\/([0-9]+|[0-9]+\/)$/';
-      if (preg_match($regex, $url["path"])) {
-        $movie_hash = preg_replace($regex, "$1", $url["path"]);
-        $vid        = preg_replace($regex, "$2", $url["path"]);
-        $width      = 600; // original 400
-        $height     = 338; // original 225
-        $embed = "<object width='$width' height='$height' ".
-        "id='flash58974' classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000'>".
-        "<param name='movie' value='//flash.sonypictures.com/video/universalplayer/sharedPlayer.swf'></param>".
-        "<param name='allowFullscreen' value='true'></param>".
-        "<param name='allowNetworking' value='all'></param>".
-        "<param name='allowScriptAccess' value='always'></param>".
-        "<param name='flashvars' value='clip=$vid&feed=http%3A//www.sonypictures.com/previews/movies/$movie_hash.xml'></param>".
-        "<embed src='//flash.sonypictures.com/video/universalplayer/sharedPlayer.swf' ".
-        "width='$width' height='$height' type='application/x-shockwave-flash' ".
-        "flashvars='clip=$vid&feed=http%3A//www.sonypictures.com/previews/movies/$movie_hash.xml' ".
-        "allowNetworking='all' allowscriptaccess='always' allowfullscreen='true'></embed></object>";
-        return _discuzcode_video_template($embed, $link, $string, $width);
-      }
-    break;
     case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url["path"])))): 
       $embed=sprintf('<embed type="audio/x-pn-realaudio-plugin" '.
       'src="%s" '.
