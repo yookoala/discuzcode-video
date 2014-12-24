@@ -582,6 +582,9 @@ function t($string, $locale="zh-tw") {
 */
 function _discuzcode_video_template($embed, $link=False, $text=False, $width=False, $height=False) {
 
+  static $css_done;
+  $css = '';
+
   // if the video string = video link
   if (($text==$link) || ($text == False)) {
     $text = _discuzcode_string_trim($text, 45); // make the link shorter here
@@ -593,28 +596,57 @@ function _discuzcode_video_template($embed, $link=False, $text=False, $width=Fal
   $heightcode=($height===False) ? "":" height: {$height}px;";
   $source_text = t("Source");
  
+  if (!isset($css_done)) {
+    $css = <<<CODEBLOCK
+<style type="text/css">
+.videoblock {
+  border: solid 1px #DDD;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  box-shadow: 4px 4px 4px #AAA;
+}
+.videoblock .video-wrapper {
+  background: #EEE;
+}
+.videoblock .video-desc a {
+  display: block;
+  padding: 5px 6px 7px;
+  margin: 2px;
+  color: #555;
+  text-decoration: none;
+  overflow-x: hidden;
+  border-radius: 3px;
+}
+.videoblock .video-desc a:hover {
+  color: inherit;
+  background: #FEFEFE;
+}
+</style>
+CODEBLOCK;
+  }
+
   if (($link===False) AND ($text===False)) {
     $codeblock = <<<CODEBLOCK
-<div class="videoblock" style="width: {$width}px;{$heightcode} border: solid 1px #000; background: #CCC;">
-  <div style="background: #000;">$embed</div>
+<div class="videoblock" style="width: {$width}px;{$heightcode}">
+  <div class="video-wrapper">$embed</div>
 </div>
 CODEBLOCK;
   } elseif (($link===False) AND ($text!==False)) {
     $codeblock = <<<CODEBLOCK
-<div class="videoblock" style="width: {$width}px; border: solid 1px #000; background: #CCC;">
-  <div style="background: #000;{$heightcode}">$embed</div>
-  <div style="margin: 2px 4px; overflow-x: hidden;">$text</div>
+<div class="videoblock" style="width: {$width}px; border: solid 1px #DDD; background: #CCC;">
+  <div class="video-wrapper" style="{$heightcode}">$embed</div>
+  <div class="video-desc">$text</div>
 </div>
 CODEBLOCK;
   } else {
     $codeblock = <<<CODEBLOCK
-<div class="videoblock" style="width: {$width}px; border: solid 1px #000; background: #CCC;">
-  <div style="background: #000;{$heightcode}">$embed</div>
-  <div style="margin: 2px 4px; overflow-x: hidden;">$source_text: <a href="$link" style="color: #E00;" target="_blank">$text</a></div>
+<div class="videoblock" style="width: {$width}px; border: solid 1px #DDD; background: #CCC;">
+  <div class="video-wrapper" style="{$heightcode}">$embed</div>
+  <div class="video-desc"><a href="$link" target="_blank">$source_text: $text</a></div>
 </div>
 CODEBLOCK;
   }
-  return str_replace(array("\r", "\n  ", "\n"), array("", "", ""), $codeblock);
+  return str_replace(array("\r", "\n  ", "\n"), array("", "", ""), $css.$codeblock);
 }
 
 
