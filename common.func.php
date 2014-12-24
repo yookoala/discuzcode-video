@@ -323,17 +323,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       'console="c1183760810807"></embed>', $link, $link);
       return _discuzcode_video_template($embed, $link, $string, 400);
     break;
-    case preg_match('/www\.mtvjapan\.com/', strtolower($url["host"])):
-      if (preg_match('/^\/flvplayer\/mcmsplayer\.swf$/', $url["path"])) {
-        $embed=sprintf('<object classid=clsid:D27CDB6E-AE6D-11CF-96B8-444553540000 '.
-        'codebase=http://download.macromedia.com/pub/shockwave/cabs'.
-        '/flash/swflash.cab#version=6,0,40,0>'.
-        '<embed src=%s '.
-        'type=application/x-shockwave-flash '.
-        'wmode=transparent width=650 height=338/></object>', $link, $link);
-        return _discuzcode_video_template($embed, $link, $string, 650);
-      }
-    break;
     case preg_match('/movies\.ign\.com/', strtolower($url["host"])):
       if (preg_match('/^\/dor\/articles\/[0-9]+\/.+?\/videos\/.+?\.html$/', $url["path"])) {
         $regex = '/^\/dor\/articles\/([0-9]+)\/.+?\/videos\/(.+?)\.html$/';
