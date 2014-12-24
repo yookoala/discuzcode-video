@@ -233,17 +233,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         return _discuzcode_video_template($embed, $link, $string, $width);
       }
     break;
-    case preg_match('/[a-z]+?\.dorkly\.com/', strtolower($url["host"])):
-      $regex='/^\/video\/(\d+)\/(.+?)$/';
-      if (preg_match($regex, $url["path"])) {
-        $clipid=preg_replace($regex, '$1', $url["path"]);
-        $embed=sprintf('<iframe src="//www.dorkly.com/e/%s" '.
-          'width="600" height="338" frameborder="0" '.
-          'webkitAllowFullScreen allowFullScreen></iframe>',
-          $clipid);
-        return _discuzcode_video_template($embed, $link, $string, 600);
-      }
-    break; 
     case preg_match('/www\.ku6\.com/', strtolower($url["host"])):
       if (preg_match('/^\/show\/.+?\.html$/', $url["path"])) {
         $vid=preg_replace('/^\/show\/(.+?)\.html$/', '$1', $url["path"]);
