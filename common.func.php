@@ -67,28 +67,6 @@ function _discuzcode_video_callback($matches) {
         return _discuzcode_video_template($embed, $link, $string);
       }
     break;
-    case (strtolower($url["host"])=='veoh.com'):
-    case preg_match('/[a-z]+?\.veoh.com/', strtolower($url["host"])):
-      if (preg_match('/^\/watch\/\w+$/', $url["path"])) {
-        $vid = preg_replace('/^\/watch\/(\w+)/', '$1', $url["path"]);
-        $embed = sprintf('<object width="615" height="512" id="veohFlashPlayer" '.
-          'name="veohFlashPlayer"><param name="movie" '.
-          'value="//www.veoh.com/swf/webplayer/WebPlayer.swf?'.
-          'version=AFrontend.5.7.0.1396&permalinkId=%s&'.
-          'player=videodetailsembedded&videoAutoPlay=0&id=anonymous">'.
-          '</param><param name="allowFullScreen" value="true">'.
-          '</param><param name="allowscriptaccess" value="always"></param>'.
-          '<embed src="//www.veoh.com/swf/webplayer/WebPlayer.swf?'.
-          'version=AFrontend.5.7.0.1396&permalinkId=%s&'.
-          'player=videodetailsembedded&videoAutoPlay=0&id=anonymous" '.
-          'type="application/x-shockwave-flash" '.
-          'allowscriptaccess="always" allowfullscreen="true" '.
-          'width="615" height="512" id="veohFlashPlayerEmbed" '.
-          'name="veohFlashPlayerEmbed"></embed></object>', $vid, $vid);
-        return _discuzcode_video_template($embed, FALSE, FALSE, 615, 512);
-      }
-    break;
-
     case (preg_match('/^(player|v)\.youku\.com$/i', $url["host"])):
 
       if (strtolower($url["host"])=='player.youku.com') {
