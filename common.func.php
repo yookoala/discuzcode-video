@@ -218,18 +218,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         return _discuzcode_video_template($embed, $link, $string, 460);
       }
     break;
-    case preg_match('/[a-z]+?\.builderau\.com\.au/', strtolower($url["host"])):
-      if (preg_match('/^\/video\/play\/\d+/', $url["path"])) {
-        $vid=(int) preg_replace('/^\/video\/play\/(\d+?)/', '$1', $url["path"]);
-        $embed=sprintf('<object width="400" height="330"><param name="movie" '.
-        'value="//www.builderau.com.au/video/embed/%d"></param></param>'.
-        '<param name="allowfullscreen" value="true"></param>'.
-        '<embed src="//www.builderau.com.au/video/embed/%d" '.
-        'type="application/x-shockwave-flash" allowfullscreen="true" '.
-        'width="400" height="330"></embed></object>', $vid, $vid);
-        return _discuzcode_video_template($embed, $link, $string, 400);
-      }
-    break;
     case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url["path"])))): 
       $embed=sprintf('<embed type="audio/x-pn-realaudio-plugin" '.
       'src="%s" '.
