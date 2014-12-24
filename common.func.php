@@ -350,14 +350,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       );
       return _discuzcode_video_template($embed, $link, $string, 600);
     break;
-    case strtolower($url["host"]) == 'vlog.xuite.net':
-      if (preg_match('/^\/play\/(\w+\=\=)$/', $url['path'], $path_matches)) {
-        $embed = '<iframe marginwidth="0" marginheight="0" src="//vlog.xuite.net/embed/'.
-          $path_matches[1].
-          '?ar=0&as=0" width="640" height="360" scrolling="no" frameborder="0"></iframe>';
-        return _discuzcode_video_template($embed, $link, $string, 640, 360);
-      }
-    break;
     case strtolower($url["host"]) == 'store.steampowered.com':
       if (preg_match('/^\/app\/(\d+)[\/]*$/', $url['path'], $path_matches)) {
         $embed = '<iframe src="//store.steampowered.com/widget/'.
