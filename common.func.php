@@ -23,10 +23,6 @@ function _discuzcode_video_replace($message) {
   $message=preg_replace_callback("/\[ignvideo\](.+?)\[\/ignvideo\]/i",
     '_discuzcode_video_ignvideo_callback', $message);
 
-  // [video] bbcode support
-  $message=preg_replace_callback("/\[video\](.+?)\[\/video\]/is", 
-    "_discuzcode_video_html_callback", $message);
-
   return $message;
 }
 
