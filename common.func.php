@@ -95,23 +95,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       'console="c1183760810807"></embed>', $link, $link);
       return _discuzcode_video_template($embed, $link, $string, 400);
     break;
-    case preg_match('/you\.video\.sina\.com\.cn/', strtolower($url["host"])):
-      $regex = '/^\/b\/([0-9]+?)-([0-9]+?)\.html$/';
-      if (preg_match($regex, $url["path"])) {
-        $vid = preg_replace($regex, "$1", $url["path"]);
-        $uid = preg_replace($regex, "$2", $url["path"]);
-        $embed = sprintf('<object id="ssss" width="480" height="370" >'.
-        '<param name="allowScriptAccess" value="always" />'.
-        '<embed pluginspage="http://www.macromedia.com/go/getflashplayer" '.
-        'src="http://vhead.blog.sina.com.cn/player/outer_player.swf?'.
-        'auto=0&vid=%d&uid=%d" '.
-        'type="application/x-shockwave-flash" name="ssss" '.
-        'allowFullScreen="true" '.
-        'allowScriptAccess="always" width="480" height="370">'.
-        '</embed></object>', $vid, $uid);
-        return _discuzcode_video_template($embed, $link, $string, 480);
-      }
-    break;
   }
   
   return $matches[0];
