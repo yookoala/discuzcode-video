@@ -233,33 +233,6 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
         return _discuzcode_video_template($embed, $link, $string, $width);
       }
     break;
-    case preg_match('/[a-z]+?\.collegehumor\.com/', strtolower($url["host"])):
-      if (preg_match('/^\/video\:\d+$/', $url["path"])) {
-        $clipid=preg_replace('/^\/video\:(\d+?)$/', '$1', $url["path"]);
-        $embed=sprintf('<object type="application/x-shockwave-flash" '.
-        'data="//www.collegehumor.com/moogaloop/'.
-        'moogaloop.swf?clip_id=%d&fullscreen=1" '.
-        'width="480" height="360" ><param name="allowfullscreen" value="true" />'.
-        '<param name="movie" quality="best" value="//www.collegehumor.com/'.
-        'moogaloop/moogaloop.swf?clip_id=%d&fullscreen=1" /></object>',
-        $clipid, $clipid);
-        return _discuzcode_video_template($embed, $link, $string, 480);
-      } elseif (preg_match('/^\/moogaloop\/moogaloop\.swf$/', $url["path"])) {
-        parse_str($url["query"], $args); 
-        $clipid=$args['clip_id'];
-        $video_path = 'http://www.collegehumor.com/video:' . $clipid;
-        $string = ($string === $link) ? $video_path : $string;
-        $link = $video_path;
-        $embed=sprintf('<object type="application/x-shockwave-flash" '.
-        'data="//www.collegehumor.com/moogaloop/'.
-        'moogaloop.swf?clip_id=%d&fullscreen=1" '.
-        'width="480" height="360" ><param name="allowfullscreen" value="true" />'.
-        '<param name="movie" quality="best" value="//www.collegehumor.com/'.
-        'moogaloop/moogaloop.swf?clip_id=%d&fullscreen=1" /></object>',
-        $clipid, $clipid);
-        return _discuzcode_video_template($embed, $link, $string, 480);
-       }
-    break; 
     case preg_match('/[a-z]+?\.dorkly\.com/', strtolower($url["host"])):
       $regex='/^\/video\/(\d+)\/(.+?)$/';
       if (preg_match($regex, $url["path"])) {
