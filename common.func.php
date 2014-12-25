@@ -54,24 +54,8 @@ function _discuzcode_video_callback($matches) {
       $embed['html'], $link, $string, $embed['width'], $embed['height']);
   }
 
-  // obsoleted code waiting for retirement
-  switch (TRUE) {
-    case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url['path'])))): 
-      $embed=sprintf('<embed type="audio/x-pn-realaudio-plugin" '.
-      'src="%s" '.
-      'width="400" height="300" autostart="false" '.
-      'controls="imagewindow" nojava="true" '.
-      'console="c1183760810807" '.
-      'pluginspage="//www.real.com/"></embed><br>'.
-      '<embed type="audio/x-pn-realaudio-plugin" '.
-      'src="%s" '.
-      'width="400" height="26" autostart="false" '.
-      'nojava="true" controls="ControlPanel" '.
-      'console="c1183760810807"></embed>', $link, $link);
-      return _discuzcode_video_template($embed, $link, $string, 400);
-    break;
-  }
-  
+  // return the original matching string
+  // if no embed replacement could be found
   return $matches[0];
 }
 
