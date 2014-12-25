@@ -45,7 +45,7 @@ function _discuzcode_video_callback($matches) {
   $url=parse_url(str_replace('&amp;', '&', $link));
 
   // use Widgetfy to determine embed code
-  if (($embed = Widgetarian\Widgetfy\Site::translate($link)) !=NULL) {
+  if (($embed = Phata\Widgetfy\Site::translate($link)) !=NULL) {
     return _discuzcode_video_template(
       $embed['html'], $link, $string, $embed['width'], $embed['height']);
   }
