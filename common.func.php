@@ -49,8 +49,12 @@ function _discuzcode_video_callback($matches) {
   if (($embed = Phata\Widgetfy\Site::translate($link_raw)) != NULL) {
     return _discuzcode_video_template(
       $embed['html'], $link, $string, $embed['width'], $embed['height']);
+  } elseif (($embed = Phata\Widgetfy\MediaFile::translate($link_raw)) != NULL) {
+    return _discuzcode_video_template(
+      $embed['html'], $link, $string, $embed['width'], $embed['height']);
   }
 
+  // obsoleted code waiting for retirement
   switch (TRUE) {
     case (strtolower($url['scheme']) == 'mms'):
     case (preg_match('/\.(wmv|avi|asx|mpg|mpeg)$/i', basename(strtolower($url['path'])))):
