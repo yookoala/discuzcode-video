@@ -72,13 +72,6 @@ function _discuzcode_video_callback($matches) {
       '</OBJECT>', $link, $link);
       return _discuzcode_video_template($embed, $link, $string, 480);
     break;
-    case (preg_match('/\.(ogg)$/i', basename(strtolower($url['path'])))):
-      $embed = sprintf('<video width=600 src="%s" controls=true>Sorry, your browser has the following problem(s):
-<ul><li>It does not support playing <a href="http://www.theora.org/" target="_blank">OGG Theora</a>; or</li>
-<li>It does notthe HTML5 &lt;video&gt; element.</li></ul> Please upgrade to a browser such as <a
-href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
-      return _discuzcode_video_template($embed, $link, $string, 600);
-    break;
     case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url['path'])))): 
       $embed=sprintf('<embed type="audio/x-pn-realaudio-plugin" '.
       'src="%s" '.
