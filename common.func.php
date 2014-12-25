@@ -42,10 +42,11 @@ function _discuzcode_video_callback($matches) {
     $string = $matches[1];
   }
   
-  $url=parse_url(str_replace('&amp;', '&', $link));
+  $link_raw = str_replace('&amp;', '&', $link);
+  $url=parse_url($link_raw);
 
   // use Widgetfy to determine embed code
-  if (($embed = Phata\Widgetfy\Site::translate($link)) != NULL) {
+  if (($embed = Phata\Widgetfy\Site::translate($link_raw)) != NULL) {
     return _discuzcode_video_template(
       $embed['html'], $link, $string, $embed['width'], $embed['height']);
   }
