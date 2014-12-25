@@ -11,12 +11,12 @@
 * simplified interface
 ************************************************************/
 
-function _discuzcode_video_replace($message) {
+function &_discuzcode_video_replace(&$message) {
 
   // basic url to video support
-  $message=preg_replace_callback("/\[url\](.+?)\[\/url\]/i",
+  $message=preg_replace_callback('/\[url\](.+?)\[\/url\]/i',
     '_discuzcode_video_callback', $message);
-  $message=preg_replace_callback("/\[url=(https?|ftp){1}:\/\/([^\[\"']+?)\](.+?)\[\/url\]/is",
+  $message=preg_replace_callback('/\[url=(https?|ftp){1}:\/\/([^\["\']+?)\](.+?)\[\/url\]/is',
     '_discuzcode_video_callback', $message);
 
   return $message;
@@ -45,15 +45,15 @@ function _discuzcode_video_callback($matches) {
   $url=parse_url(str_replace('&amp;', '&', $link));
 
   // use Widgetfy to determine embed code
-  if (($embed = Phata\Widgetfy\Site::translate($link)) !=NULL) {
+  if (($embed = Phata\Widgetfy\Site::translate($link)) != NULL) {
     return _discuzcode_video_template(
       $embed['html'], $link, $string, $embed['width'], $embed['height']);
   }
 
   switch (TRUE) {
-    case (strtolower($url["scheme"]) == "mms"):
-    case (preg_match('/\.(wmv|avi|asx|mpg|mpeg)$/i', basename(strtolower($url["path"])))):
-    case (preg_match('/^uploaded_videos\.php$/i', basename(strtolower($url["path"])))):
+    case (strtolower($url['scheme']) == 'mms'):
+    case (preg_match('/\.(wmv|avi|asx|mpg|mpeg)$/i', basename(strtolower($url['path'])))):
+    case (preg_match('/^uploaded_videos\.php$/i', basename(strtolower($url['path'])))):
       $embed=sprintf('<OBJECT ID="MediaPlayer" WIDTH="480" HEIGHT="290" '.
       'CLASSID="CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95"'.
       'STANDBY="Loading Windows Media Player components..." TYPE="application/x-oleobject">'.
@@ -67,14 +67,14 @@ function _discuzcode_video_callback($matches) {
       '</OBJECT>', $link, $link);
       return _discuzcode_video_template($embed, $link, $string, 480);
     break;
-    case (preg_match('/\.(ogg)$/i', basename(strtolower($url["path"])))):
+    case (preg_match('/\.(ogg)$/i', basename(strtolower($url['path'])))):
       $embed = sprintf('<video width=600 src="%s" controls=true>Sorry, your browser has the following problem(s):
 <ul><li>It does not support playing <a href="http://www.theora.org/" target="_blank">OGG Theora</a>; or</li>
 <li>It does notthe HTML5 &lt;video&gt; element.</li></ul> Please upgrade to a browser such as <a
 href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
       return _discuzcode_video_template($embed, $link, $string, 600);
     break;
-    case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url["path"])))): 
+    case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url['path'])))): 
       $embed=sprintf('<embed type="audio/x-pn-realaudio-plugin" '.
       'src="%s" '.
       'width="400" height="300" autostart="false" '.
@@ -93,82 +93,9 @@ href="http://www.getfirefox.com">Firefox 3.6</a>.</video>', $link);
   return $matches[0];
 }
 
-/**
-* interface for discuz or other program to use
-* will change the text back to html if the tags are
-* <object>, <param> or <embed>
-*/
-function _discuzcode_video_html_callback($matches) {
-  
-  // check local configurations
-  if (_DISCUZCODE_VIDEO_TAG_SUPPORT_ === TRUE) {
-   
-    // change html entity back to html
-    $embed = trim(html_entity_decode($matches[1]));
-    
-    // extract non-embed-code as text
-    $text  = str_replace("\n", "<br />",
-      trim(preg_replace("/(\<br\>|\<br\/\>|\<br[ ]+\/\>)/i", "", strip_tags($embed, '<a>'))));
-    $text  = preg_replace("/[ \t]+/", " ", $text);
-    
-    // process spaces in the video embed
-    $embed = str_replace(array("\n", "\r"), "", $embed);
-    $embed = preg_replace("/((?<=\>)[ \t]+)/", "", $embed);
-
-    // turn some miss placed smiley image back
-    $embed = str_replace(array(
-      '&lt<img src="images/smilies/default/titter.gif" smilieid="9" border="0" alt="" />',
-      '<img src="images/smilies/default/biggrin.gif" smilieid="3" border="0" alt="" />',
-    ), 
-    array(
-      "<p",
-      ":D",
-    ), $embed);
-
-    // remove spacing to prevent parsing problem
-    $embed = preg_replace("/ [ ]+/", " ", $embed);
-    
-    // remove possible vulernable code in the video embed
-    $allowed = '<object><param><embed><video><source>';
-    $embed = strip_tags($embed, $allowed);
-  
-    // remove text before or after embed code
-    if (!preg_match("/.+?\>$/", $embed)) $embed = preg_replace("/(.*\>).+?$/", "$1", $embed);
-    if (!preg_match("/^<.+?/", $embed))  $embed = preg_replace("/^.+?(\<.*)/", "$1", $embed);
-    
-    // experimental: check, in the embed code, the width of it
-    preg_match("/width=\"([0-9]+)\"/", $embed, $result);
-    if (!empty($result)) {
-      $width = $result[1];
-      if (!empty($text)) {
-        return _discuzcode_video_template($embed, False, $text, $width);
-      } else {
-        return _discuzcode_video_template($embed, False, False, $width);
-      }
-    } else {
-      return "<div class=\"video\">$embed</div>";
-    }
-  
-  }
-}
-
-
 /********************************************************
 * helper functions
 *********************************************************/
-
-/**
-* helper function. get the url of this file
-*/
-function _discuzcode_video_script_url() {
-  static $url;
-  if (!isset($url)) {
-    $regex = sprintf("/^%s/", preg_quote($_SERVER["DOCUMENT_ROOT"], "/"));
-    $url = preg_replace($regex, "", __FILE__);
-    if ($url == __FILE__) $url = FALSE;
-  }
-  return $url;
-}
 
 /**
 * helper function make a non-unicode string shortter
@@ -179,7 +106,7 @@ function _discuzcode_string_trim($string, $length) {
   if (strlen($string)>$length) {
     $str_head = substr($string, 0, $length-10);
     $str_tail = substr($string, -7, 7);
-    return "$str_head...$str_tail";
+    return $str_head.'...'.$str_tail;
   }
   return $string;
 }
@@ -188,11 +115,11 @@ function _discuzcode_string_trim($string, $length) {
 * language
 *********************************************************/
 
-function t($string, $locale="zh-tw") {
+function t($string, $locale='zh-tw') {
   static $lang;
 
   if (!isset($lang)) {
-    $lang["zh-tw"]["Source"] = "來源";
+    $lang['zh-tw']['Source'] = '來源';
   }
 
   return isset($lang[$locale][$string]) ? $lang[$locale][$string] : $string;
@@ -216,10 +143,10 @@ function _discuzcode_video_template($embed, $link=False, $text=False, $width=Fal
   }
   
   // experimental: check, in the embed code, the width of it
-  preg_match("/width=\"([0-9]+)\"/", $embed, $result); $width_default = 480;
+  preg_match('/width=\"([0-9]+)\"/', $embed, $result); $width_default = 480;
   $width=($width===False) ? (!empty($result) ? $result[1] : $width_default) : $width;
-  $heightcode=($height===False) ? "":" height: {$height}px;";
-  $source_text = t("Source");
+  $heightcode=($height===False) ? '':' height: '.$height.'px;';
+  $source_text = t('Source');
  
   if (!isset($css_done)) {
     $css = <<<CODEBLOCK
@@ -271,7 +198,7 @@ CODEBLOCK;
 </div>
 CODEBLOCK;
   }
-  return str_replace(array("\r", "\n  ", "\n"), array("", "", ""), $css.$codeblock);
+  return str_replace(array("\r", "\n  ", "\n"), array('', '', ''), $css.$codeblock);
 }
 
 
