@@ -56,22 +56,6 @@ function _discuzcode_video_callback($matches) {
 
   // obsoleted code waiting for retirement
   switch (TRUE) {
-    case (strtolower($url['scheme']) == 'mms'):
-    case (preg_match('/\.(wmv|avi|asx|mpg|mpeg)$/i', basename(strtolower($url['path'])))):
-    case (preg_match('/^uploaded_videos\.php$/i', basename(strtolower($url['path'])))):
-      $embed=sprintf('<OBJECT ID="MediaPlayer" WIDTH="480" HEIGHT="290" '.
-      'CLASSID="CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95"'.
-      'STANDBY="Loading Windows Media Player components..." TYPE="application/x-oleobject">'.
-      '<PARAM NAME="FileName" VALUE="%s">'.
-      '<PARAM NAME="autostart" VALUE="false">'.
-      '<PARAM NAME="ShowControls" VALUE="true">'.
-      '<PARAM NAME="ShowStatusBar" VALUE="false">'.
-      '<PARAM NAME="ShowDisplay" VALUE="false">'.
-      '<EMBED TYPE="application/x-mplayer2" SRC="%s" NAME="MediaPlayer"'.
-      'WIDTH="480" HEIGHT="290" ShowControls="1" ShowStatusBar="1" ShowDisplay="0" autostart="0"></EMBED>'.
-      '</OBJECT>', $link, $link);
-      return _discuzcode_video_template($embed, $link, $string, 480);
-    break;
     case (preg_match('/\.(rm|rmvb)$/i', basename(strtolower($url['path'])))): 
       $embed=sprintf('<embed type="audio/x-pn-realaudio-plugin" '.
       'src="%s" '.
