@@ -25,7 +25,7 @@
  * 5) inside the function, find a line that start with: 'if(!$bbcodeoff && $allowbbcode) {'
  * 6) before the line you found in step 5, add this line
  * 
- *     require_once(dirname(__FILE__).'/discuzcode-video/discuzcode.func.video.php');
+ *     require(dirname(__FILE__).'/discuzcode-video/discuzcode.func.video.php');
  * 
  * 7) save and exit
  * 8) copy this folder to the <your installation dir>/include
