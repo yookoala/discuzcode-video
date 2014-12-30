@@ -45,11 +45,18 @@ function _discuzcode_video_callback($matches) {
   $link_raw = str_replace('&amp;', '&', $link);
   $url=parse_url($link_raw);
 
+  // options about the 
+  $options = array(
+    'width' => '100%',
+  );
+
   // use Widgetfy to determine embed code
-  if (($embed = Phata\Widgetfy\Site::translate($link_raw)) != NULL) {
+  if (($embed = Phata\Widgetfy\Site::translate($link_raw,
+      $options)) != NULL) {
     return _discuzcode_video_template(
       $embed['html'], $link, $string, $embed['width'], $embed['height']);
-  } elseif (($embed = Phata\Widgetfy\MediaFile::translate($link_raw)) != NULL) {
+  } elseif (($embed = Phata\Widgetfy\MediaFile::translate($link_raw,
+      $options)) != NULL) {
     return _discuzcode_video_template(
       $embed['html'], $link, $string, $embed['width'], $embed['height']);
   }
