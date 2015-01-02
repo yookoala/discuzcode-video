@@ -134,10 +134,11 @@ function _discuzcode_video_template($embed, $link=False, $text=False, $width=Fal
   text-decoration: none;
   overflow-x: hidden;
   border-radius: 3px;
+  transition: 0.5s;
 }
 .videoblock .video-desc a:hover {
   color: inherit;
-  background: #FEFEFE;
+  background-color: #FEFEFE;
 }
 </style>
 CODEBLOCK;
