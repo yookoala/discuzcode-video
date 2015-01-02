@@ -1,11 +1,20 @@
 <?php
 
-
 /**
- * @file common.func.php
+ * @file functions.inc.php
  *
  * All the commonly used functions are defined here.
- */
+ *
+ * This is a php script for Discuz! forum.
+ * After install this script, your Discuz! forum will automatically turn
+ * several video links into embed flash player. You don't have to give
+ * provide users HTML capability and they still get inline video. The
+ * site is more hack prove and everybody is happy.
+ * requires PHP 5 or above
+ *
+ * @author Koala Yeung
+ * @version 8.x
+ **/
 
 namespace yookoala\discuzcode;
 
