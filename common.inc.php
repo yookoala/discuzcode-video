@@ -11,7 +11,7 @@
  * requires PHP 5 or above
  * 
  * @author Koala Yeung
- * @version 7.x
+ * @version 8.x
  **/
 
 /**
@@ -32,13 +32,6 @@
  * 9) done. test it.
  **/
 
-// configurations
-// --------------
-// If False, this script will not change [video] tag
-// into html. This can prevent Flash to hijack your cookies
-// If you trust your users enough, change it to TRUE
-define('_DISCUZCODE_VIDEO_TAG_SUPPORT_', TRUE);
-
 // discuz security check
 if(!defined('IN_DISCUZ')) {
   exit('Access Denied');
@@ -46,7 +39,10 @@ if(!defined('IN_DISCUZ')) {
 
 // include the files
 require_once __DIR__ . '/lib/widgetfy/autoload.php';
-require_once __DIR__ . '/common.func.php';
+require_once __DIR__ . '/functions.inc.php';
 
 // replace links with embed code
-$message = _discuzcode_video_replace($message);
+$message = yookoala\discuzcode\replace($message, array(
+  'width' => 640, // You may change the default width here
+));
+

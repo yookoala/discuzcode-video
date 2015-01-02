@@ -1,38 +1,60 @@
 <?php
 
+
 /**
  * @file common.func.php
  *
  * All the commonly used functions are defined here.
  */
 
+namespace yookoala\discuzcode;
 
-/***********************************************************
-* simplified interface
-************************************************************/
+use Phata\Widgetfy as Widgetfy;
 
-function &_discuzcode_video_replace(&$message) {
+/**
+ * publicly used API for replacing Discuz BBcode
+ * with widget / video embed
+ *
+ * @param string $message forum post message
+ * @param mixed[] $options array of options for rendering
+ * @return string altered message
+ */
+function &replace(&$message, $options=array()) {
+
+  // remember options to use
+  _replace_options($options);
 
   // basic url to video support
   $message=preg_replace_callback('/\[url\](.+?)\[\/url\]/i',
-    '_discuzcode_video_callback', $message);
+    __NAMESPACE__ . '\widgetfy_callback', $message);
   $message=preg_replace_callback('/\[url=(https?|ftp){1}:\/\/([^\["\']+?)\](.+?)\[\/url\]/is',
-    '_discuzcode_video_callback', $message);
+    __NAMESPACE__ . '\widgetfy_callback', $message);
 
   return $message;
 }
 
-
-/**********************************************************
-* interfaces
-***********************************************************/
+/**
+ * internally used. store options
+ * of the replace method
+ *
+ * @param mixed[] $options array of options for rendering
+ */
+function _replace_options($options=FALSE) {
+  static $_options;
+  if ($options !== FALSE) {
+    $_options = $options;
+  }
+  return $_options;
+}
 
 /**
-* the interface for discuz or other program to use
-* will return embed video html as long as the link
-* matches any case provided in this function
-*/
-function _discuzcode_video_callback($matches) {
+ * callback function to replace links
+ * with themed widgetfy output.
+ *
+ * @param string[] $matches array of matches string provided
+ *                 by preg_replace_callback
+ */
+function widgetfy_callback($matches) {
   
   if (sizeof($matches)==4) {
     $link = "{$matches[1]}://{$matches[2]}";
@@ -46,9 +68,9 @@ function _discuzcode_video_callback($matches) {
   $url=parse_url($link_raw);
 
   // use Widgetfy to determine embed code
-  $options = array('width' => 640);
-  if (($embed = Phata\Widgetfy::translate($link_raw, $options)) != NULL) {
-    return _discuzcode_video_template(
+  $options = _replace_options(); // retrieve options
+  if (($embed = Widgetfy::translate($link_raw, $options)) != NULL) {
+    return theme(
       $embed['html'], $link, $string,
       $embed['dimension']->width,
       $embed['dimension']->height);
@@ -59,14 +81,14 @@ function _discuzcode_video_callback($matches) {
   return $matches[0];
 }
 
-/********************************************************
-* helper functions
-*********************************************************/
-
 /**
-* helper function make a non-unicode string shortter
-*/
-function _discuzcode_string_trim($string, $length) {
+ * Helper function to make a non-unicode string shortter
+ *
+ * @param string $string the string to be trimmed
+ * @param int the targeted trimed length
+ * @return string trimmed string
+ */
+function string_trim($string, $length) {
   $length = (int) $length;
   if ($length<16) return $string;
   if (strlen($string)>$length) {
@@ -77,10 +99,14 @@ function _discuzcode_string_trim($string, $length) {
   return $string;
 }
 
-/********************************************************
-* language
-*********************************************************/
-
+/**
+ * Helper function to do i18n interface.
+ * only support Traditional Chinese new
+ *
+ * @param string $string the string to be translated
+ * @param string $locale locale language code
+ * @return string translated string
+ */
 function t($string, $locale='zh-tw') {
   static $lang;
 
@@ -91,21 +117,25 @@ function t($string, $locale='zh-tw') {
   return isset($lang[$locale][$string]) ? $lang[$locale][$string] : $string;
 }
 
-/********************************************************
-* themeing
-*********************************************************/
-
 /**
-* apply an overall template to all video
-*/
-function _discuzcode_video_template($embed, $link=False, $text=False, $width=False, $height=False) {
+ * Helper function to apply theme to all video embeds
+ *
+ * @param string $embed HTML embed
+ * @param string $link
+ * @param string $text
+ * @param mixed $width integer width of the wrapper div;
+ *              or FALSE if obmitted.
+ * @param mixed $height integer height of the wrapper div;
+ *              of FALSE if obmitted.
+ */
+function theme($embed, $link=False, $text=False, $width=False, $height=False) {
 
   static $css_done;
   $css = '';
 
   // if the video string = video link
   if (($text==$link) || ($text == False)) {
-    $text = _discuzcode_string_trim($text, 45); // make the link shorter here
+    $text = string_trim($text, 45); // make the link shorter here
   }
   
   // experimental: check, in the embed code, the width of it
@@ -167,5 +197,4 @@ CODEBLOCK;
   }
   return str_replace(array("\r", "\n  ", "\n"), array('', '', ''), $css.$codeblock);
 }
-
 
