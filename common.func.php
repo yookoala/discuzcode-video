@@ -46,12 +46,12 @@ function _discuzcode_video_callback($matches) {
   $url=parse_url($link_raw);
 
   // use Widgetfy to determine embed code
-  if (($embed = Phata\Widgetfy\Site::translate($link_raw)) != NULL) {
+  $options = array('width' => 640);
+  if (($embed = Phata\Widgetfy::translate($link_raw, $options)) != NULL) {
     return _discuzcode_video_template(
-      $embed['html'], $link, $string, $embed['width'], $embed['height']);
-  } elseif (($embed = Phata\Widgetfy\MediaFile::translate($link_raw)) != NULL) {
-    return _discuzcode_video_template(
-      $embed['html'], $link, $string, $embed['width'], $embed['height']);
+      $embed['html'], $link, $string,
+      $embed['dimension']->width,
+      $embed['dimension']->height);
   }
 
   // return the original matching string
