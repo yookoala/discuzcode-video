@@ -1,11 +1,18 @@
+/**
+ * declorations
+ */
 .videoblock {
-  border: solid 1px #DDD;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
-  box-shadow: 4px 4px 4px #AAA;
+  border: solid 1px #FFF;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  box-shadow: 2px 4px 10px #888;
+  transition: 0.5s;
+}
+.videoblock:hover {
+  box-shadow: 2px 4px 30px #555;
 }
 .videoblock .video-wrapper {
-  background: #EEE;
+  background: #DDD;
 }
 .videoblock .video-desc a {
   display: block;
@@ -20,4 +27,43 @@
 .videoblock .video-desc a:hover {
   color: inherit;
   background-color: #FEFEFE;
+}
+
+
+/**
+ * main demo style
+ */
+.videoblock {
+  max-width: 640px;
+}
+.videoblock-dynamic .wrap-scale-width iframe,
+.videoblock-dynamic .wrap-scale-width embed,
+.videoblock-dynamic .wrap-scale-width object,
+.videoblock-dynamic .wrap-scale-width video {
+  position: relative;
+  width: 100%;
+}
+
+.videoblock-dynamic .wrap-scale-width-height {
+  position: relative;
+  padding-top: 25px;
+  height: 0;
+}
+.videoblock-dynamic .wrap-scale-width-height iframe,
+.videoblock-dynamic .wrap-scale-width-height embed,
+.videoblock-dynamic .wrap-scale-width-height object,
+.videoblock-dynamic .wrap-scale-width-height video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/**
+ * site specific fixes
+ */
+.fb-post, .fb-post iframe[style], .fb-post span,
+.fb-comments, .fb-comments iframe[style], .fb-comments span {
+  width: 100% !important;
 }

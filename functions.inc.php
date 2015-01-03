@@ -19,6 +19,7 @@
 namespace yookoala\discuzcode;
 
 use Phata\Widgetfy as Widgetfy;
+use Phata\Widgetfy\Utils\Dimension as Dimension;
 
 /**
  * publicly used API for replacing Discuz BBcode
@@ -80,7 +81,7 @@ function widgetfy_callback($matches) {
   $options = _replace_options(); // retrieve options
   if (($embed = Widgetfy::translate($link_raw, $options)) != NULL) {
     return theme(
-      $embed['html'], $link, $string,
+      $embed, $link, $string,
       $embed['dimension']->width,
       $embed['dimension']->height);
   }
@@ -129,30 +130,23 @@ function t($string, $locale='zh-tw') {
 /**
  * Helper function to apply theme to all video embeds
  *
- * @param string $embed HTML embed
+ * @param mixed[] $embed result array of Widgetfy::translate()
  * @param string $link
  * @param string $text
- * @param mixed $width integer width of the wrapper div;
- *              or FALSE if obmitted.
- * @param mixed $height integer height of the wrapper div;
- *              of FALSE if obmitted.
  */
-function theme($embed, $link=False, $text=False, $width=False, $height=False) {
+function theme($embed, $link=False, $text=False) {
 
   static $css_done;
   $css = '';
 
-  // if the video string = video link
+  $d = $embed['dimension'];
+
+  // if no given text, or if the video string = video link
   if (($text==$link) || ($text == False)) {
-    $text = string_trim($text, 45); // make the link shorter here
+    $text = t('Source') . ': '.string_trim($text, 45); // make the link shorter here
   }
   
-  // experimental: check, in the embed code, the width of it
-  preg_match('/width=\"([0-9]+)\"/', $embed, $result); $width_default = 480;
-  $width=($width===False) ? (!empty($result) ? $result[1] : $width_default) : $width;
-  $heightcode=($height===False) ? '':' height: '.$height.'px;';
-  $source_text = t('Source');
- 
+  // link to the stylesheet on first run
   if (!isset($css_done)) {
     $css = '<link rel="stylesheet" type="text/css" href="'.path().'/style/style.css"/>';
   }
@@ -162,7 +156,7 @@ function theme($embed, $link=False, $text=False, $width=False, $height=False) {
   $codeblock = ob_get_contents();
   ob_end_clean();
 
-  return str_replace(array("\r", "\n  ", "\n"), array('', '', ''), $css.$codeblock);
+  return preg_replace('/[\t ]*[\r\n]+[\t ]*/', ' ', $css.$codeblock);
 }
 
 /**
@@ -178,4 +172,26 @@ function path() {
     if ($path == '/') $path = '';
   }
   return $path;
+}
+
+/**
+ * render css style for .videoblock
+ */
+function style_block($embed) {
+  $d = &$embed['dimension'];
+  // if scale model is no-scale, allow to "force dynamic"
+  // by setting "dynamic" to TRUE
+  if (!$d->dynamic && ($d->scale_model == 'no-scale')) {
+    return 'width: '.$d->width.'px';
+  }
+  return '';
+}
+
+// render css style for .videowrapper
+function style_wrapper($embed) {
+  $d = &$embed['dimension'];
+  if ($d->dynamic && ($d->scale_model == 'scale-width-height')) {
+    return 'padding-bottom: ' . ($d->factor * 100) . '%;';
+  }
+  return '';
 }
