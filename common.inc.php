@@ -29,4 +29,3 @@ require_once __DIR__ . '/functions.inc.php';
 $message = yookoala\discuzcode\replace($message, array(
   'width' => 640, // You may change the default width here
 ));
-

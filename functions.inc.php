@@ -154,56 +154,28 @@ function theme($embed, $link=False, $text=False, $width=False, $height=False) {
   $source_text = t('Source');
  
   if (!isset($css_done)) {
-    $css = <<<CODEBLOCK
-<style type="text/css">
-.videoblock {
-  border: solid 1px #DDD;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
-  box-shadow: 4px 4px 4px #AAA;
-}
-.videoblock .video-wrapper {
-  background: #EEE;
-}
-.videoblock .video-desc a {
-  display: block;
-  padding: 5px 6px 7px;
-  margin: 2px;
-  color: #555;
-  text-decoration: none;
-  overflow-x: hidden;
-  border-radius: 3px;
-  transition: 0.5s;
-}
-.videoblock .video-desc a:hover {
-  color: inherit;
-  background-color: #FEFEFE;
-}
-</style>
-CODEBLOCK;
+    $css = '<link rel="stylesheet" type="text/css" href="'.path().'/style/style.css"/>';
   }
 
-  if (($link===False) AND ($text===False)) {
-    $codeblock = <<<CODEBLOCK
-<div class="videoblock" style="width: {$width}px;{$heightcode}">
-  <div class="video-wrapper">$embed</div>
-</div>
-CODEBLOCK;
-  } elseif (($link===False) AND ($text!==False)) {
-    $codeblock = <<<CODEBLOCK
-<div class="videoblock" style="width: {$width}px; border: solid 1px #DDD; background: #CCC;">
-  <div class="video-wrapper" style="{$heightcode}">$embed</div>
-  <div class="video-desc">$text</div>
-</div>
-CODEBLOCK;
-  } else {
-    $codeblock = <<<CODEBLOCK
-<div class="videoblock" style="width: {$width}px; border: solid 1px #DDD; background: #CCC;">
-  <div class="video-wrapper" style="{$heightcode}">$embed</div>
-  <div class="video-desc"><a href="$link" target="_blank">$source_text: $text</a></div>
-</div>
-CODEBLOCK;
-  }
+  ob_start();
+  require __DIR__ . '/style/template.tpl.php';
+  $codeblock = ob_get_contents();
+  ob_end_clean();
+
   return str_replace(array("\r", "\n  ", "\n"), array('', '', ''), $css.$codeblock);
 }
 
+/**
+ * determine the URL path of discuzcode-video installation
+ *
+ * @return string URL path to discuzcode-video without trailing slash
+ */
+function path() {
+  static $path;
+  if (!isset($path)) {
+    $docroot_regex = '^'.preg_quote($_SERVER['DOCUMENT_ROOT'], '/');
+    $path = preg_replace('/'.$docroot_regex.'/', '', __DIR__);
+    if ($path == '/') $path = '';
+  }
+  return $path;
+}
