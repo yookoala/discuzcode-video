@@ -140,13 +140,13 @@ function theme($embed, $link=False, $text=False) {
   $css = '';
 
   // use object dimension as dimension reference
-  $d = $embed['dimension'];
+  $d = &$embed['dimension'];
 
   // test if the link is kickstarter
   if ($link !== FALSE && (preg_match('/^\w+\:\/\/(www\.|)kickstarter\.com/', $link) == 1)) {
     // override dimension reference
-    $d = clone $d; // just to be safe
     $d->width += $embed['other']['dimension']->width;
+    $d->dynamic = FALSE;
 
     // attach the alternated
     $embed['html'] .= $embed['other']['html'];
@@ -186,23 +186,69 @@ function path() {
 }
 
 /**
- * render css style for .videoblock
+ * Helper funcion to template. Render attributes for .videoblock
+ *
+ * @param mixed[] $embed embed definition
+ * @return string HTTP attributes
  */
-function style_block($embed) {
+function render_block_attrs($embed) {
+
+  // attributes to be rendered
+  $classes = array();
+  $styles = array();
+
+  // shortcuts
   $d = &$embed['dimension'];
+
+  // determine classes
+  $classes[] = 'videoblock';
+  if ($d->dynamic) {
+    $classes[] = 'videoblock-dynamic';
+  }
+
+  // determine inline CSS style(s)
   // if scale model is no-scale, allow to "force dynamic"
   // by setting "dynamic" to TRUE
-  if (!$d->dynamic && ($d->scale_model == 'no-scale')) {
-    return 'width: '.$d->width.'px';
+  if ($d->dynamic) {
+    $styles[] = 'max-width:'.$d->width.'px';
+  } else {
+    $styles[] = 'width: '.$d->width.'px';
   }
-  return '';
+
+  // render the attributes
+  $class = implode(' ', $classes);
+  $style = implode('; ', $styles) . (!empty($styles) ? ';' : '');
+  return 'class="'.$class.'" style="'.$style.'"';
 }
 
-// render css style for .videowrapper
-function style_wrapper($embed) {
+/**
+ * Helper funcion to template. Render attributes for .videowrapper
+ *
+ * @param mixed[] $embed embed definition
+ * @return string HTTP attributes
+ */
+function render_wrapper_attrs($embed) {
+
+  // attributes to be rendered
+  $classes = array();
+  $styles = array();
+
+  // shortcuts
   $d = &$embed['dimension'];
-  if ($d->dynamic && ($d->scale_model == 'scale-width-height')) {
-    return 'padding-bottom: ' . ($d->factor * 100) . '%;';
+
+  // determine classes
+  $classes[] = 'video-wrapper';
+  if ($d->dynamic) {
+    $classes[] = 'wrap-'.$d->scale_model;
   }
-  return '';
+
+  // determine inline CSS style(s)
+  if ($d->dynamic && ($d->scale_model == 'scale-width-height')) {
+    $classes[] = 'padding-bottom: ' . ($d->factor * 100) . '%;';
+  }
+
+  // render the attributes
+  $class = implode(' ', $classes);
+  $style = implode('; ', $styles) . (!empty($styles) ? ';' : '');
+  return 'class="'.$class.'" style="'.$style.'"';
 }

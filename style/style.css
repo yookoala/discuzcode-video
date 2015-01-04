@@ -7,12 +7,13 @@
   border-bottom-right-radius: 6px;
   box-shadow: 2px 4px 10px #888;
   transition: 0.5s;
+  background-color: #DDD;
 }
 .videoblock:hover {
   box-shadow: 2px 4px 30px #555;
 }
 .videoblock .video-wrapper {
-  background: #DDD;
+  background-color: #CCC;
 }
 .videoblock .video-desc a {
   display: block;
@@ -26,9 +27,8 @@
 }
 .videoblock .video-desc a:hover {
   color: inherit;
-  background-color: #FEFEFE;
+  background-color: #FFFFFF;
 }
-
 
 /**
  * main demo style
