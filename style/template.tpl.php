@@ -10,7 +10,7 @@ namespace yookoala\discuzcode;
 
 ?>
 <div class="videoblock <?php if ($d->dynamic) print 'videoblock-dynamic'; ?>"
-	style="<?php print style_block($embed); ?>">
+	style="<?php print style_block($embed); ?> max-width: <?php print $d->width; ?>px;">
 	<div class="video-wrapper wrap-<?php print $d->scale_model;?>"
 		style="<?php print style_wrapper($embed); ?>"><?php print $embed['html']; ?></div>
 	<?php if ($link !== FALSE) { ?>

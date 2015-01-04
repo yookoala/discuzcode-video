@@ -33,7 +33,7 @@
 /**
  * main demo style
  */
-.videoblock {
+.videoblock-dynamic {
   max-width: 640px;
 }
 .videoblock-dynamic .wrap-scale-width iframe,

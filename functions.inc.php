@@ -139,7 +139,18 @@ function theme($embed, $link=False, $text=False) {
   static $css_done;
   $css = '';
 
+  // use object dimension as dimension reference
   $d = $embed['dimension'];
+
+  // test if the link is kickstarter
+  if ($link !== FALSE && (preg_match('/^\w+\:\/\/(www\.|)kickstarter\.com/', $link) == 1)) {
+    // override dimension reference
+    $d = clone $d; // just to be safe
+    $d->width += $embed['other']['dimension']->width;
+
+    // attach the alternated
+    $embed['html'] .= $embed['other']['html'];
+  }
 
   // if no given text, or if the video string = video link
   if (($text==$link) || ($text == False)) {
