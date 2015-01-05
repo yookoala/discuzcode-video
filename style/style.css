@@ -33,9 +33,6 @@
 /**
  * main demo style
  */
-.videoblock-dynamic {
-  max-width: 640px;
-}
 .videoblock-dynamic .wrap-scale-width iframe,
 .videoblock-dynamic .wrap-scale-width embed,
 .videoblock-dynamic .wrap-scale-width object,

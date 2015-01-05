@@ -244,7 +244,7 @@ function render_wrapper_attrs($embed) {
 
   // determine inline CSS style(s)
   if ($d->dynamic && ($d->scale_model == 'scale-width-height')) {
-    $classes[] = 'padding-bottom: ' . ($d->factor * 100) . '%;';
+    $styles[] = 'padding-bottom: ' . ($d->factor * 100) . '%;';
   }
 
   // render the attributes
